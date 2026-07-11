@@ -1,6 +1,16 @@
-import type { ErrorPayload, HMRPayload, Update } from 'vite'
-import type { InferCustomEventPayload } from 'vite/types/customEvent'
-import type { ViteHotContext } from 'vite/types/hot'
+import type { ErrorPayload, HMRPayload, InferCustomEventPayload, Update } from 'vite'
+
+interface ViteHotContext {
+  readonly data: any
+  accept: (() => void) & ((cb: (mod: any) => void) => void) & ((dep: string, cb: (mod: any) => void) => void) & ((deps: readonly string[], cb: (mods: any[]) => void) => void)
+  acceptExports: (exportNames: string | readonly string[], cb?: (mod: any) => void) => void
+  dispose: (cb: (data: any) => void) => void
+  prune: (cb: (data: any) => void) => void
+  invalidate: (message?: string) => void
+  on: (event: string, cb: (payload: any) => void) => void
+  off: (event: string, cb: (payload: any) => void) => void
+  send: (event: string, data?: any) => void
+}
 
 // Vite v3 doesn't export overlay
 // import { ErrorOverlay, overlayId } from 'vite/src/client/overlay'
@@ -153,8 +163,8 @@ async function handleMessage(payload: HMRPayload) {
       break
     }
     default: {
-      const check: never = payload
-      return check
+      // handle `vite:pong` and other Vite internal message types
+
     }
   }
 }
@@ -210,7 +220,7 @@ async function waitForSuccessfulPing(ms = 1000) {
       await fetch(`${location.protocol}//${socketHost}`)
       break
     }
-    catch (e) {
+    catch {
       // wait ms before attempting to ping again
       await new Promise(resolve => setTimeout(resolve, ms))
     }
@@ -328,7 +338,7 @@ async function fetchUpdate({ path, acceptedPath, timestamp }: Update) {
       try {
         const newMod = await import(
           /* @vite-ignore */
-          normalizeScriptUrl(`${base + path.slice(1)}.js${query ? `_${query}` : ''}`, timestamp)
+          normalizeScriptUrl(`${base + path.slice(1)}.js${query ? `_${query}` : ''}`, timestamp),
         )
         moduleMap.set(dep, newMod)
       }
@@ -432,7 +442,7 @@ export function createHotContext(ownerPath: string): ViteHotContext {
       }
     },
 
-    dispose(cb) {
+    dispose(cb: (data: any) => void | Promise<void>) {
       disposeMap.set(ownerPath, cb)
     },
 
@@ -447,7 +457,7 @@ export function createHotContext(ownerPath: string): ViteHotContext {
     },
 
     // custom events
-    on(event, cb) {
+    on(event: string, cb: (payload: any) => void) {
       const addToMap = (map: Map<string, any[]>) => {
         const existing = map.get(event) || []
         existing.push(cb)
@@ -457,7 +467,7 @@ export function createHotContext(ownerPath: string): ViteHotContext {
       addToMap(newListeners)
     },
 
-    send(event, data) {
+    send(event: string, data?: any) {
       messageBuffer.push(JSON.stringify({ type: 'custom', event, data }))
       sendMessageBuffer()
     },

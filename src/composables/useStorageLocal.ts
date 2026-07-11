@@ -1,9 +1,9 @@
 import type {
-  MaybeRef,
   RemovableRef,
   StorageLikeAsync,
   UseStorageAsyncOptions,
 } from '@vueuse/core'
+import type { MaybeRef } from 'vue'
 import {
   useStorageAsync,
 } from '@vueuse/core'

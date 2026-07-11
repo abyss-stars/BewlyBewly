@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onClickOutside, onKeyStroke, useMouseInElement } from '@vueuse/core'
 import type { Ref, UnwrapNestedRefs } from 'vue'
+import type { UnReadDm, UnReadMessage, UserInfo } from './types'
 
+import { onClickOutside, onKeyStroke, useMouseInElement } from '@vueuse/core'
 import { useBewlyApp } from '~/composables/useAppProvider'
 import { useDark } from '~/composables/useDark'
 import { useDelayedHover } from '~/composables/useDelayedHover'
@@ -11,8 +12,8 @@ import { settings } from '~/logic'
 import api from '~/utils/api'
 import { getUserID, isHomePage, isInIframe } from '~/utils/main'
 import emitter from '~/utils/mitt'
-import { createTransformer } from '~/utils/transformer'
 
+import { createTransformer } from '~/utils/transformer'
 import BewlyOrBiliPageSwitcher from './components/BewlyOrBiliPageSwitcher.vue'
 import ChannelsPop from './components/ChannelsPop.vue'
 import FavoritesPop from './components/FavoritesPop.vue'
@@ -25,7 +26,6 @@ import UploadPop from './components/UploadPop.vue'
 import UserPanelPop from './components/UserPanelPop.vue'
 import WatchLaterPop from './components/WatchLaterPop.vue'
 import { updateInterval } from './notify'
-import type { UnReadDm, UnReadMessage, UserInfo } from './types'
 
 // import { useTopBarStore } from '~/stores/topBarStore'
 
@@ -50,10 +50,6 @@ const { isOutside: isOutsideTopBar } = useMouseInElement(headerTarget)
 // initially, assume the user is logged in cuz data retrieval is slow, which may show the login
 // button even after login. if the user is not logged in, the login button will show up later
 const isLogin = ref<boolean>(true)
-
-const logo = ref<HTMLElement>() as Ref<HTMLElement>
-const avatarImg = ref<HTMLImageElement>() as Ref<HTMLImageElement>
-const avatarShadow = ref<HTMLImageElement>() as Ref<HTMLImageElement>
 
 const scrollTop = ref<number>(0)
 const oldScrollTop = ref<number>(0)
@@ -236,6 +232,14 @@ function setupTopBarItemTransformer(key: keyof typeof popupVisible) {
 
   return transformer
 }
+
+void avatarTransformer
+void notificationsTransformer
+void momentsTransformer
+void historyTransformer
+void watchLaterTransformer
+void uploadTransformer
+void moreTransformer
 
 function setupTopBarItemHoverEvent(key: keyof typeof popupVisible) {
   return useDelayedHover({
@@ -537,7 +541,7 @@ defineExpose({
             z-1 relative w-fit
           >
             <a
-              ref="logo" href="//www.bilibili.com"
+              href="//www.bilibili.com"
               target="_top"
               class="group logo"
               :class="{
@@ -877,7 +881,6 @@ defineExpose({
               @click="event => handleClickTopBarItem(event, 'userPanel')"
             >
               <ALink
-                ref="avatarImg"
                 :href="`https://space.bilibili.com/${mid}`"
                 type="topBar"
                 class="avatar-img"
@@ -890,7 +893,6 @@ defineExpose({
                 }"
               />
               <div
-                ref="avatarShadow"
                 class="avatar-shadow"
                 :class="{ hover: popupVisible.userPanel }"
                 :style="{

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onKeyStroke, useMouseInElement } from '@vueuse/core'
-import type { Ref, UnwrapNestedRefs } from 'vue'
+import type { UnwrapNestedRefs } from 'vue'
+import type { UnReadDm, UnReadMessage, UserInfo } from './types'
 
+import { onKeyStroke, useMouseInElement } from '@vueuse/core'
 import { useBewlyApp } from '~/composables/useAppProvider'
 import { useDelayedHover } from '~/composables/useDelayedHover'
 import { OVERLAY_SCROLL_BAR_SCROLL, TOP_BAR_VISIBILITY_CHANGE } from '~/constants/globalEvents'
@@ -9,8 +10,8 @@ import { AppPage } from '~/enums/appEnums'
 import { settings } from '~/logic'
 import api from '~/utils/api'
 import { getUserID, isHomePage } from '~/utils/main'
-import emitter from '~/utils/mitt'
 
+import emitter from '~/utils/mitt'
 import ChannelsPop from './components/ChannelsPop.vue'
 import FavoritesPop from './components/FavoritesPop.vue'
 import HistoryPop from './components/HistoryPop.vue'
@@ -21,7 +22,6 @@ import UploadPop from './components/UploadPop.vue'
 import WatchLaterPop from './components/WatchLaterPop.vue'
 import { updateInterval } from './notify'
 import OldUserPanelPop from './oldTopBarComponents/OldUserPanelPop.vue'
-import type { UnReadDm, UnReadMessage, UserInfo } from './types'
 
 // import { useTopBarStore } from '~/stores/topBarStore'
 
@@ -46,9 +46,6 @@ const { isOutside: isOutsideTopBar } = useMouseInElement(headerTarget)
 // button even after login. if the user is not logged in, the login button will show up later
 const isLogin = ref<boolean>(true)
 
-const logo = ref<HTMLElement>() as Ref<HTMLElement>
-const avatarImg = ref<HTMLImageElement>() as Ref<HTMLImageElement>
-const avatarShadow = ref<HTMLImageElement>() as Ref<HTMLImageElement>
 const favoritesPopRef = ref<any>()
 const momentsPopRef = ref()
 
@@ -240,6 +237,16 @@ const more = useDelayedHover({
   },
   leave: () => popupVisible.more = false,
 })
+
+void channels
+void avatar
+void notifications
+void moments
+void favorites
+void history
+void watchLater
+void upload
+void more
 
 // #endregion
 
@@ -494,7 +501,7 @@ defineExpose({
             z-1 relative w-fit mr-auto
           >
             <a
-              ref="logo" href="//www.bilibili.com"
+              href="//www.bilibili.com"
               target="_top"
               class="group logo"
               :class="{ activated: popupVisible.channels }"
@@ -553,7 +560,6 @@ defineExpose({
             shadow="$bew-shadow-2" rounded-full
           >
             <ALink
-              ref="avatarImg"
               :href="`https://space.bilibili.com/${mid}`"
               type="topBar"
               class="avatar-img"
@@ -570,7 +576,6 @@ defineExpose({
               z-1
             />
             <div
-              ref="avatarShadow"
               class="avatar-shadow"
               :class="{ hover: popupVisible.userPanel }"
               :style="{

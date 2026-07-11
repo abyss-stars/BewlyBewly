@@ -1,19 +1,19 @@
-import '~/styles'
-import 'uno.css'
-
 import { createApp } from 'vue'
-
 import { useDark } from '~/composables/useDark'
+
 import { BEWLY_MOUNTED } from '~/constants/globalEvents'
+
 import { settings } from '~/logic'
 import { setupApp } from '~/logic/common-setup'
 import RESET_BEWLY_CSS from '~/styles/reset.css?raw'
 import { runWhenIdle } from '~/utils/lazyLoad'
 import { compareVersions, injectCSS, isHomePage, isInIframe, isNotificationPage, isVideoOrBangumiPage } from '~/utils/main'
 import { SVG_ICONS } from '~/utils/svgIcons'
-
 import { version } from '../../package.json'
 import App from './views/App.vue'
+
+import '~/styles'
+import 'uno.css'
 
 const isFirefox: boolean = /Firefox/i.test(navigator.userAgent)
 
@@ -265,7 +265,7 @@ function injectApp() {
   const resetStyleEl = document.createElement('style')
   resetStyleEl.textContent = `${RESET_BEWLY_CSS}`
   styleEl.setAttribute('rel', 'stylesheet')
-  styleEl.setAttribute('href', browser.runtime.getURL('dist/contentScripts/style.css'))
+  styleEl.setAttribute('href', browser.runtime.getURL('dist/contentScripts/bewly-bewly.css'))
   shadowDOM.appendChild(resetStyleEl)
   shadowDOM.appendChild(styleEl)
   shadowDOM.appendChild(root)
@@ -306,7 +306,7 @@ function injectApp() {
 //     const styleEl = document.createElement('style')
 //     styleEl.setAttribute('data-bewly-style', 'true')
 //     styleEl.textContent = `
-//       @import url(${browser.runtime.getURL('dist/contentScripts/style.css')});
+//       @import url(${browser.runtime.getURL('dist/contentScripts/bewly-bewly.css')});
 //       ${settings.value.adaptToOtherPageStyles
 //       ? `
 //         * {

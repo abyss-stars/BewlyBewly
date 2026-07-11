@@ -3,13 +3,15 @@ import { useBewlyApp } from '~/composables/useAppProvider'
 import { settings } from '~/logic'
 import { isHomePage } from '~/utils/main'
 
-const props = defineProps<{
-  href: string
+const props = withDefaults(defineProps<{
+  href?: string
   title?: string
   rel?: string
   type: 'topBar' | 'videoCard'
   customClickEvent?: boolean
-}>()
+}>(), {
+  href: '',
+})
 
 const emit = defineEmits<{
   (e: 'click', value: MouseEvent): void

@@ -1,7 +1,7 @@
-import fs from 'fs-extra'
 import type { Manifest } from 'webextension-polyfill'
-
 import type PkgType from '../package.json'
+
+import fs from 'fs-extra'
 import { isDev, isFirefox, isSafari, port, r } from '../scripts/utils'
 
 export async function getManifest() {
@@ -62,7 +62,7 @@ export async function getManifest() {
           '*://music.bilibili.com/*',
         ],
         js: ['./dist/contentScripts/index.global.js'],
-        css: ['./dist/contentScripts/style.css'],
+        css: ['./dist/contentScripts/bewly-bewly.css'],
         run_at: 'document_start',
         match_about_blank: true,
         all_frames: true,
@@ -90,7 +90,7 @@ export async function getManifest() {
     ],
     web_accessible_resources: [
       {
-        resources: ['dist/contentScripts/style.css', 'assets/*'],
+        resources: ['dist/contentScripts/bewly-bewly.css', 'assets/*'],
         matches: ['<all_urls>'],
         // matches: ['./assets/*'],
       },

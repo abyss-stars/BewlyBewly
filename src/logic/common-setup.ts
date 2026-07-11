@@ -1,12 +1,12 @@
-import 'vue-toastification/dist/index.css'
+import type { App } from 'vue'
 
 import { createPinia } from 'pinia'
-import type { App } from 'vue'
 import Toast, { POSITION } from 'vue-toastification'
 import { getCurrentContext } from 'webext-bridge'
-
 import components from '~/components'
+
 import { i18n } from '~/utils/i18n'
+import 'vue-toastification/dist/index.css'
 
 const pinia = createPinia()
 
