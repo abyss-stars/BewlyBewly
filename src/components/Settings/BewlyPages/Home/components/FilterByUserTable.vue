@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 用户筛选规则表格
+ * 支持添加、编辑、删除按用户名或 UID 筛选的规则
+ */
+
 import { onKeyStroke } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'vue-toastification'
@@ -14,6 +19,7 @@ const editingIndex = ref<number>(-1) // -1: add new, >= 0: edit index
 const keywordRef = ref<HTMLInputElement | null>(null)
 const remarkRef = ref<HTMLInputElement | null>(null)
 
+/** 添加新用户筛选规则，检查重复后插入到列表头部 */
 function handleAddFilter() {
   if (!addingFilter.value.keyword.trim())
     return
@@ -33,10 +39,12 @@ function handleAddFilter() {
   })
 }
 
+/** 清空添加筛选的输入框 */
 function handleClearAddingFilter() {
   addingFilter.value = { keyword: '', remark: '' }
 }
 
+/** 进入编辑模式，复制数据到编辑变量并聚焦指定输入框 */
 async function handleEditFilter(index: number, focusItem: 'keyword' | 'remark' = 'keyword') {
   editingIndex.value = index
   editingFilter.value = { ...settings.value.filterByUser[index] }
@@ -51,6 +59,7 @@ async function handleEditFilter(index: number, focusItem: 'keyword' | 'remark' =
   }
 }
 
+/** 确认编辑，检查重复后保存修改 */
 function handleConfirmFilter(index: number) {
   if (!editingFilter.value.keyword.trim())
     return
@@ -67,6 +76,7 @@ function handleConfirmFilter(index: number) {
     editingIndex.value = -1
 }
 
+/** 删除指定位置的筛选规则 */
 function handleDeleteFilter(index: number) {
   settings.value.filterByUser.splice(index, 1)
 }

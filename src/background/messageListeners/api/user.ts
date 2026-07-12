@@ -1,3 +1,7 @@
+/**
+ * 用户相关 API 定义
+ * 包含用户信息、用户统计、关注/取关操作等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 历史记录页面组件。
+ * 展示用户的观看历史，支持搜索、删除单条记录、清空全部历史、暂停/恢复记录等功能。
+ */
 import type { List as HistoryItem, HistoryResult } from '~/models/history/history'
 import type { List as HistorySearchItem, HistorySearchResult } from '~/models/video/historySearch'
 
@@ -19,9 +23,11 @@ const noMoreContent = ref<boolean>(false)
 const historyList = reactive<Array<HistoryItem>>([])
 const currentPageNum = ref<number>(1)
 const keyword = ref<string>()
+/** 历史记录是否处于暂停状态 */
 const historyStatus = ref<boolean>()
 const { handlePageRefresh, handleReachBottom, haveScrollbar } = useBewlyApp()
 
+/** 历史记录业务类型枚举（视频、直播、文章等） */
 const HistoryBusiness = computed(() => {
   return Business
 })
@@ -33,6 +39,7 @@ onMounted(() => {
   initPageAction()
 })
 
+/** 初始化页面行为：触底加载更多（根据是否有搜索关键词调用不同接口）和下拉刷新 */
 function initPageAction() {
   handleReachBottom.value = () => {
     if (isLoading.value)
@@ -89,6 +96,7 @@ function getHistoryList() {
     })
 }
 
+/** 根据关键词搜索历史记录 */
 function searchHistoryList() {
   isLoading.value = true
   api.history.searchHistoryList({
@@ -124,6 +132,7 @@ function handleSearch() {
   else getHistoryList()
 }
 
+/** 删除单条历史记录 */
 function deleteHistoryItem(index: number, historyItem: HistoryItem) {
   api.history.deleteHistoryItem({
     kid: `${historyItem.history.business}_${historyItem.history.oid}`,
@@ -164,6 +173,7 @@ function getHistoryUrl(item: HistoryItem): string {
   return ''
 }
 
+/** 获取历史记录项的封面图（文章类型使用 covers 数组中的图） */
 function getHistoryItemCover(item: HistoryItem) {
   if (item.history.business === 'article' || item.history.business === 'article-list') {
     if (item.covers)
@@ -173,6 +183,7 @@ function getHistoryItemCover(item: HistoryItem) {
   return removeHttpFromUrl(item.cover)
 }
 
+/** 获取历史记录是否暂停的状态 */
 function getHistoryPauseStatus() {
   api.history.getHistoryPauseStatus()
     .then((res) => {
@@ -181,6 +192,7 @@ function getHistoryPauseStatus() {
     })
 }
 
+/** 设置历史记录暂停/恢复状态 */
 function setHistoryPauseStatus(isPause: boolean) {
   api.history.setHistoryPauseStatus({
     csrf: getCSRF(),

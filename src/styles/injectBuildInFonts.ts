@@ -1,7 +1,13 @@
+/**
+ * 注入内置字体
+ * 通过 CSS @font-face 动态注入扩展内置的字体资源，
+ * 包括数字字体、西文字体、中文字体和中文破折号专用字体
+ */
 import browser from 'webextension-polyfill'
 
 import { injectCSS } from '~/utils/main'
 
+/** 注入内置字体的 @font-face 声明到页面 */
 injectCSS(`
   @font-face {
     font-family: "Numbers";

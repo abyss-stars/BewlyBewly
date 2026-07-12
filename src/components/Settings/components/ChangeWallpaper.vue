@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 更换壁纸组件
+ * 支持全局和搜索页两种类型，提供内置壁纸选择和本地图片上传功能
+ */
+
 import { WALLPAPERS } from '~/constants/imgs'
 import { settings } from '~/logic'
 import { compressAndResizeImage } from '~/utils/main'
@@ -18,6 +23,7 @@ const isBuildInWallpaper = computed(() => {
   return isGlobal.value ? settings.value.wallpaperMode === 'buildIn' : settings.value.searchPageWallpaperMode === 'buildIn'
 })
 
+/** 切换壁纸类型：内置壁纸或按 URL 设置 */
 function changeWallpaperType(type: 'buildIn' | 'byUrl') {
   if (isGlobal.value) {
     settings.value.wallpaperMode = type
@@ -35,9 +41,9 @@ function changeWallpaperType(type: 'buildIn' | 'byUrl') {
   }
 }
 
+/** 更换壁纸 URL */
 function changeWallpaper(url: string) {
   if (isGlobal.value) {
-    // If you had already set the wallpaper, it enables the wallpaper masking to prevent text hard to see
     if (url)
       settings.value.enableWallpaperMasking = true
     else
@@ -49,6 +55,7 @@ function changeWallpaper(url: string) {
   }
 }
 
+/** 将图片文件转换为 Base64 字符串 */
 function fileToBase64(inputFile: File) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -58,6 +65,7 @@ function fileToBase64(inputFile: File) {
   })
 }
 
+/** 处理上传壁纸：压缩图片后将 Base64 数据保存到设置 */
 function handleUploadWallpaper(e: Event) {
   if (uploadWallpaperRef.value)
     (uploadWallpaperRef.value as HTMLInputElement).click()
@@ -80,6 +88,7 @@ function handleUploadWallpaper(e: Event) {
   })
 }
 
+/** 移除自定义上传的壁纸 */
 function handleRemoveCustomWallpaper() {
   changeWallpaper('')
   settings.value.locallyUploadedWallpaper = null

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 画中画窗口组件，支持 Chrome Document Picture-in-Picture API 和普通弹窗回退方案
 // import { onKeyStroke } from '@vueuse/core'
 
 import { useDark } from '~/composables/useDark'
@@ -21,6 +22,7 @@ onMounted(() => {
   openPipWindow()
 })
 
+// 打开画中画窗口，优先使用 Chrome Document PiP API，不支持时回退到普通弹窗
 async function openPipWindow() {
   // https://developer.chrome.com/docs/web-platform/document-picture-in-picture
   if ('documentPictureInPicture' in window) {
@@ -57,11 +59,13 @@ async function openPipWindow() {
   }
 }
 
+// 在新标签页中打开当前页面
 function handleOpenInNewTab() {
   window.open(currentUrl.value, '_blank')
   handleClose()
 }
 
+// 关闭画中画窗口并释放资源
 async function handleClose() {
   await releaseIframeResources()
   await nextTick()
@@ -71,6 +75,7 @@ async function handleClose() {
   emit('close')
 }
 
+// 释放 iframe 资源
 async function releaseIframeResources() {
   // Clear iframe content
   currentUrl.value = 'about:blank'

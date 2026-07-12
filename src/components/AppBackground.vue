@@ -1,3 +1,4 @@
+// 应用背景组件，负责壁纸展示、模糊遮罩、主题色渐变背景等视觉效果
 <script setup lang="ts">
 import { useDebounceFn } from '@vueuse/core'
 
@@ -16,6 +17,7 @@ const currentActivatedCover = ref<string>('')
 const isBlurredCoverLoaded = ref<boolean>(false)
 
 // Use a more aggressive debounce and skip unnecessary updates
+// 使用防抖更新封面，避免频繁切换时闪烁
 const debouncedCoverUpdate = useDebounceFn((newValue: string) => {
   if (newValue === currentActivatedCover.value)
     return
@@ -37,34 +39,42 @@ watch(
   },
 )
 
+// 将主题色从 hex 转换为 HSL 格式
 const themeColorHsl = computed(() => {
   return hexToHSL(settings.value.themeColor).replace('hsl(', '').replace(')', '')
 })
+// 提取色相分量
 const themeColorHue = computed((): number => {
   return Number(themeColorHsl.value.split(',')[0]) || 0
 })
+// 提取饱和度分量
 const themeColorSaturation = computed((): number => {
   return Number(themeColorHsl.value.split(',')[1].replace('%', '')) || 0
 })
+// 提取亮度分量
 const themeColorLightness = computed((): number => {
   return Number(themeColorHsl.value.split(',')[2].replace('%', '')) || 0
 })
+// 基于主题色生成渐变背景 CSS
 const themeColorLinearGradientBackground = computed((): string => {
-  return `linear-gradient(180deg, 
+  return `linear-gradient(180deg,
     transparent 0% 44%,
-    hsla(${themeColorHue.value}, ${themeColorSaturation.value + 20}%, ${themeColorLightness.value}%, 0.4) 62%, 
+    hsla(${themeColorHue.value}, ${themeColorSaturation.value + 20}%, ${themeColorLightness.value}%, 0.4) 62%,
     hsl(${themeColorHue.value}, ${themeColorSaturation.value}%, ${themeColorLightness.value}%) 80%,
     hsl(${themeColorHue.value}, ${themeColorSaturation.value}%, 100%) 100%)`
 })
 
+// 监听壁纸遮罩透明度变化
 watch(() => settings.value.wallpaperMaskOpacity, () => {
   setAppWallpaperMaskingOpacity()
 })
 
+// 监听搜索页壁纸遮罩透明度变化
 watch(() => settings.value.searchPageWallpaperMaskOpacity, () => {
   setAppWallpaperMaskingOpacity()
 })
 
+// 监听页面切换：如果用户单独设置了搜索页壁纸，则切换时重新应用遮罩
 watch(() => props.activatedPage, (newValue, oldValue) => {
   // If u have set the `individuallySetSearchPageWallpaper`, reapply the wallpaper when the new page is search page
   // or when switching from a search page to another page, since search page has its own wallpaper.
@@ -76,6 +86,7 @@ onMounted(() => {
   setAppWallpaperMaskingOpacity()
 })
 
+// 设置壁纸遮罩透明度 CSS 变量，区分普通页面和搜索页面
 function setAppWallpaperMaskingOpacity() {
   const bewlyElement = document.querySelector('#bewly') as HTMLElement
   if (settings.value.individuallySetSearchPageWallpaper && props.activatedPage === AppPage.Search)

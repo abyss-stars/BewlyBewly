@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Dock 导航组件，侧边/底部导航栏，支持页面切换、主题切换、设置入口、返回顶部/刷新
 import type { HoveringDockItem } from './types'
 import type { DockItem } from '~/stores/mainStore'
 import { Icon } from '@iconify/vue'
@@ -54,6 +55,7 @@ const hoveringDockItem = reactive<HoveringDockItem>({
 const currentDockItems = ref<DockItem[]>([])
 const activatedDockItem = ref<DockItem>()
 
+// 计算 tooltip 的弹出位置，根据 dock 位置决定
 const tooltipPlacement = computed(() => {
   if (settings.value.dockPosition === 'left')
     return 'right'
@@ -85,6 +87,7 @@ watch(() => JSON.stringify(settings.value.dockItemsConfig), () => {
   currentDockItems.value = computeDockItem()
 }, { immediate: true })
 
+// 计算当前应显示的 Dock 项列表，合并用户配置与默认项
 function computeDockItem(): DockItem[] {
   // Transfer the data from dockItemVisibilityList into dockItemsConfig
   if (settings.value.dockItemVisibilityList.length > 0 && settings.value.dockItemsConfig.length === 0) {
@@ -134,6 +137,7 @@ function computeDockItem(): DockItem[] {
   return targetDockItems
 }
 
+// 切换 Dock 的隐藏状态，仅在 autoHideDock 开启时有效
 function toggleHideDock(hide: boolean) {
   if (settings.value.autoHideDock)
     hideDock.value = hide
@@ -141,6 +145,7 @@ function toggleHideDock(hide: boolean) {
     hideDock.value = false
 }
 
+// 处理 Dock 项的点击，Ctrl/Meta 键时强制新标签页打开
 function handleDockItemClick($event: MouseEvent, dockItem: DockItem) {
   if ($event.ctrlKey || $event.metaKey) {
     openDockItemInNewTab(dockItem)
@@ -151,11 +156,13 @@ function handleDockItemClick($event: MouseEvent, dockItem: DockItem) {
   emit('dockItemClick', dockItem)
 }
 
+// 在新标签页中打开该 Dock 项对应的 Bilibili 页面
 function openDockItemInNewTab(dockItem: DockItem) {
   activatedDockItem.value = dockItem
   openLinkToNewTab(`https://www.bilibili.com/?page=${dockItem.page}`)
 }
 
+// 处理返回顶部/刷新按钮：auto 模式根据是否在顶部自动判断
 function handleBackToTopOrRefresh(action: 'backToTop' | 'refresh' | 'auto' = 'auto') {
   if (action === 'backToTop') {
     emit('backToTop')
@@ -172,6 +179,7 @@ function handleBackToTopOrRefresh(action: 'backToTop' | 'refresh' | 'auto' = 'au
   }
 }
 
+// 判断该 Dock 项是否为当前激活的页面
 function isDockItemActivated(dockItem: DockItem): boolean {
   return props.activatedPage === dockItem.page && isHomePage()
 }
@@ -179,6 +187,7 @@ function isDockItemActivated(dockItem: DockItem): boolean {
 const { width: windowWidth, height: windowHeight } = useWindowSize()
 const { width: dockWidth, height: dockHeight } = useElementSize(dockContentRef)
 
+// 计算 Dock 的缩放比例，确保其在窗口内完整显示
 const dockScale = computed((): number => {
   if (!dockHeight.value || !dockWidth.value)
     return 1
@@ -199,6 +208,7 @@ const dockScale = computed((): number => {
   return Math.min(heightScale, widthScale)
 })
 
+// 根据 Dock 位置计算缩放变换的 transform 样式和变换原点
 const dockTransformStyle = computed((): { transform: string, transformOrigin: string } => {
   const position = settings.value.dockPosition
   const scale = dockScale.value

@@ -1,3 +1,7 @@
+/**
+ * 搜索 API 定义
+ * 包含搜索建议等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

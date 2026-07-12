@@ -1,3 +1,5 @@
+/** Bilibili 追番列表 API 返回模型 */
+
 export interface WatchListResult {
   code: number
   message: string
@@ -5,6 +7,7 @@ export interface WatchListResult {
   data: Data
 }
 
+/** 追番列表分页数据 */
 export interface Data {
   list: List[]
   pn: number
@@ -12,6 +15,7 @@ export interface Data {
   total: number
 }
 
+/** 单部追番条目（含番剧详情、状态、进度等） */
 export interface List {
   season_id: number
   media_id: number
@@ -67,6 +71,7 @@ export interface List {
   subtitle_25?: string
 }
 
+/** 地区 */
 export interface Area {
   id: number
   name: Name
@@ -88,6 +93,7 @@ export enum BadgeEp {
   会员 = '会员',
 }
 
+/** 角标信息 */
 export interface BadgeInfo {
   text?: Badge
   bg_color: BgColor
@@ -111,11 +117,13 @@ export interface MultiImg {
   medium_remind: string
 }
 
+/** 多种角标信息 */
 export interface BadgeInfos {
   content_attr?: BadgeInfo
   vip_or_pay?: BadgeInfo
 }
 
+/** 配置属性（高清高亮、CC 字幕开关等） */
 export interface ConfigAttrs {
   highlight_ineffective_hd?: HighlightIneffective
   highlight_ineffective_ott?: HighlightIneffective
@@ -132,6 +140,7 @@ export interface HighlightIneffective {
   type_url: string
 }
 
+/** 首集信息 */
 export interface FirstEpInfo {
   id: number
   cover: string
@@ -142,12 +151,14 @@ export interface FirstEpInfo {
   index_show?: string
 }
 
+/** 制作人/声优 */
 export interface Producer {
   mid: number
   type: number
   is_contribute?: number
 }
 
+/** 发布时间信息 */
 export interface Publish {
   pub_time: Date
   pub_time_show: string
@@ -156,11 +167,13 @@ export interface Publish {
   pub_time_show_db?: string
 }
 
+/** 评分信息 */
 export interface Rating {
   score: number
   count: number
 }
 
+/** 版权/权限信息 */
 export interface Rights {
   allow_review: number
   is_selection: number
@@ -185,6 +198,7 @@ export enum SeasonVersion {
   Tv = 'tv',
 }
 
+/** 剧集分段（如正片、PV） */
 export interface Section {
   section_id: number
   season_id: number
@@ -204,6 +218,7 @@ export enum Copyright {
   Ugc = 'ugc',
 }
 
+/** 系列信息 */
 export interface Series {
   series_id: number
   title: string
@@ -212,6 +227,7 @@ export interface Series {
   series_ord: number
 }
 
+/** 番剧统计信息 */
 export interface Stat {
   follow: number
   view: number

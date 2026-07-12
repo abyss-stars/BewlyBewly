@@ -1,3 +1,4 @@
+/** Bilibili 顶栏直播动态模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface TopBarLiveMomentResult {
@@ -7,6 +8,7 @@ export interface TopBarLiveMomentResult {
   data: Data
 }
 
+/** 直播动态数据 */
 export interface Data {
   results: number
   page: string
@@ -14,6 +16,7 @@ export interface Data {
   list: List[]
 }
 
+/** 单个直播条目 */
 export interface List {
   cover: string
   face: string

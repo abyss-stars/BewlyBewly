@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 历史记录弹出面板
+ * 支持视频、直播和专栏三个标签页，滚动加载更多，可删除单条记录
+ */
+
 import type { Ref } from 'vue'
 import type { List as HistoryItem, HistoryResult } from '~/models/history/history'
 import { useDateFormat } from '@vueuse/core'
@@ -95,6 +100,7 @@ onMounted(() => {
   }
 })
 
+/** 切换历史记录标签页，加载中时阻止切换 */
 function onClickTab(tabId: number) {
   // Prevent changing tab when loading, cuz it will cause a bug
   if (isLoading.value)
@@ -108,11 +114,7 @@ function onClickTab(tabId: number) {
   })
 }
 
-/**
- * Return the URL of the history item
- * @param item history item
- * @return {string} url
- */
+/** 根据历史记录类型返回对应的页面 URL */
 function getHistoryUrl(item: HistoryItem) {
   if (item.uri)
     return item.uri
@@ -137,11 +139,7 @@ function getHistoryUrl(item: HistoryItem) {
   return ''
 }
 
-/**
- * Get history list
- * @param type
- * @param view_at Last viewed timestamp
- */
+/** 获取历史记录列表，根据 view_at 分页加载 */
 function getHistoryList(type: Business, view_at = 0 as number) {
   if (isLoading.value)
     return
@@ -166,6 +164,7 @@ function getHistoryList(type: Business, view_at = 0 as number) {
     })
 }
 
+/** 删除指定历史记录项 */
 function deleteHistoryItem(index: number, historyItem: HistoryItem) {
   api.history.deleteHistoryItem({
     kid: `${historyItem.history.business}_${historyItem.history.oid}`,

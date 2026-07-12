@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 兼容性设置页面
+ * 管理顶栏显示、Bilibili Evolved 颜色跟随等兼容性选项
+ */
+
 import { settings } from '~/logic'
 import { isHomePage } from '~/utils/main'
 
@@ -14,6 +19,7 @@ const bilibiliEvolvedThemeColor = computed(() => {
   return getComputedStyle(document.querySelector('html') as HTMLElement).getPropertyValue('--theme-color').trim() ?? '#00a1d6'
 })
 
+/** 切换主题颜色为 Bilibili Evolved 的主题色 */
 function changeThemeColor(color: string) {
   settings.value.themeColor = color
 }

@@ -1,4 +1,9 @@
 <script setup>
+/**
+ * 上传弹出面板
+ * 提供投稿入口：视频、专栏、音频、相簿等
+ */
+
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

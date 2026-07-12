@@ -1,7 +1,12 @@
 <script setup lang="ts">
+/**
+ * 弹出页组件
+ * 点击扩展图标时显示的弹出窗口，可快速打开选项页
+ */
 import Logo from '~/components/Logo.vue'
 import { storageDemo } from '~/logic/storage'
 
+/** 打开扩展的选项页 */
 function openOptionsPage() {
   browser.runtime.openOptionsPage()
 }

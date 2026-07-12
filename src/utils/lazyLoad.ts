@@ -1,3 +1,7 @@
+/**
+ * 懒加载与空闲时执行工具
+ * 提供浏览器空闲时执行回调（runWhenIdle）和延迟初始化值（LazyValue）的功能。
+ */
 // copy with vscode
 
 interface IdleDeadline {
@@ -76,6 +80,11 @@ declare function cancelIdleCallback(handle: number): void;
 })()
 
 // TODO: handle error
+/**
+ * 延迟求值容器
+ * 在首次访问 value 属性时才执行 executor 函数并缓存结果，
+ * 之后再次访问直接返回缓存值，避免重复计算。
+ */
 export class LazyValue<T> {
   private _value: T | undefined
   private _didRun = false

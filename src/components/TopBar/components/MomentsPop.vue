@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 动态弹出面板
+ * 展示关注用户的视频、直播和专栏动态，支持标签页切换和滚动加载更多
+ */
+
 import type { TopBarLiveMomentResult } from '~/models/moment/topBarLiveMoment'
 import type { TopBarMomentResult } from '~/models/moment/topBarMoment'
 
@@ -79,6 +84,7 @@ onMounted(() => {
   }
 })
 
+/** 切换动态标签页，加载中时阻止切换 */
 function onClickTab(tab: MomentTab) {
   // Prevent changing tab when loading, cuz it will cause a bug
   if (isLoading.value || tab.type === selectedMomentTab.value.type)
@@ -88,6 +94,7 @@ function onClickTab(tab: MomentTab) {
   initData()
 }
 
+/** 初始化动态数据：清空列表并重新获取 */
 async function initData() {
   moments.length = 0
   momentUpdateBaseline.value = ''
@@ -99,6 +106,7 @@ async function initData() {
   getData()
 }
 
+/** 根据当前标签类型获取对应的动态数据 */
 function getData() {
   if (selectedMomentTab.value.type !== 'live')
     getTopBarMoments()
@@ -106,6 +114,7 @@ function getData() {
     getTopBarLiveMoments()
 }
 
+/** 检查是否有新动态并插入到列表头部（外部可调用） */
 function checkIfHasNewMomentsThenUpdateMoments() {
   if (selectedMomentTab.value.type === 'live')
     return
@@ -148,6 +157,7 @@ function checkIfHasNewMomentsThenUpdateMoments() {
     .finally(() => isLoading.value = false)
 }
 
+/** 获取视频/专栏类型动态，支持分页 */
 function getTopBarMoments() {
   if (isLoading.value)
     return
@@ -201,6 +211,7 @@ function isNewMoment(index: number) {
   return index < newMomentsCount.value
 }
 
+/** 获取直播类型动态，支持分页 */
 function getTopBarLiveMoments() {
   if (isLoading.value)
     return
@@ -242,6 +253,7 @@ function getTopBarLiveMoments() {
     .finally(() => isLoading.value = false)
 }
 
+/** 切换稍后再看状态：添加或移除 */
 function toggleWatchLater(aid: number) {
   const isInWatchLater = addedWatchLaterList.includes(aid)
 

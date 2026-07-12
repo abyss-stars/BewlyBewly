@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * Bewly 页面设置
+ * 提供侧边栏导航，支持首页和搜索页两个子设置页面的切换
+ */
+
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 

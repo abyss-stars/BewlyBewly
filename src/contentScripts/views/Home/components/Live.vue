@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 直播列表组件。
+ * 展示关注用户的直播状态，支持无限滚动加载。
+ */
 import type { GridLayoutType } from '~/logic'
 import type { List as FollowingLiveItem, FollowingLiveResult } from '~/models/live/getFollowingLiveList'
 import { useBewlyApp } from '~/composables/useAppProvider'

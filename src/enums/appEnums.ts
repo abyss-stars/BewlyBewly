@@ -1,3 +1,9 @@
+/**
+ * 应用枚举定义
+ * 包含语言类型、应用页面和顶部栏弹出窗口的枚举值
+ */
+
+/** 语言类型枚举，支持简体中文、繁体中文、粤语和英语 */
 export enum LanguageType {
   English = 'en',
   Mandarin_CN = 'cmn-CN',
@@ -5,6 +11,7 @@ export enum LanguageType {
   Cantonese = 'jyut',
 }
 
+/** 应用页面枚举，标识各个主要页面 */
 export enum AppPage {
   Home = 'Home',
   Search = 'Search',
@@ -15,6 +22,7 @@ export enum AppPage {
   Moments = 'Moments',
 }
 
+/** 顶部栏弹出窗口类型枚举 */
 export enum TopBarPopup {
   FavoritesPop = 'FavoritesPop',
   HistoryPop = 'HistoryPop',

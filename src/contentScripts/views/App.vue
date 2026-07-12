@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * BewlyBewly 根组件。
+ * 管理页面路由、标签页切换、顶栏显示/隐藏、iframe 抽屉等功能。
+ * 通过 provide 向子组件注入共享的应用上下文。
+ */
 import type { Ref } from 'vue'
 import type { BewlyAppProvider } from '~/composables/useAppProvider'
 
@@ -20,7 +25,6 @@ const settingsStore = useSettingsStore()
 const { isDark } = useDark()
 const [showSettings, toggleSettings] = useToggle(false)
 
-// Get the 'page' query parameter from the URL
 function getPageParam(): AppPage | null {
   const urlParams = new URLSearchParams(window.location.search)
   const result = urlParams.get('page') as AppPage | null
@@ -29,7 +33,9 @@ function getPageParam(): AppPage | null {
   return null
 }
 
+/** 当前激活的页面类型（从 URL 参数或设置中读取） */
 const activatedPage = ref<AppPage>(getPageParam() || (settings.value.dockItemsConfig.find(e => e.visible === true)?.page || AppPage.Home))
+/** 各页面的异步组件映射 */
 const pages = {
   [AppPage.Home]: defineAsyncComponent(() => import('./Home/Home.vue')),
   [AppPage.Search]: defineAsyncComponent(() => import('./Search/Search.vue')),
@@ -53,6 +59,7 @@ const iframeDrawerURL = ref<string>('')
 const showIframeDrawer = ref<boolean>(false)
 
 const iframePageRef = ref()
+/** 处理 iframe 页面切换消息，切换 Bewly 页面和原始 B 站页面 */
 useEventListener(window, 'message', ({ data }) => {
   switch (data) {
     case IFRAME_PAGE_SWITCH_BEWLY:
@@ -71,6 +78,7 @@ useEventListener(window, 'message', ({ data }) => {
       break
   }
 })
+/** iframe 页面 URL：当前标签页使用原始 B 站页面或没有 Bewly 页面时，返回 B 站页面地址 */
 const iframePageURL = computed((): string => {
   // If the iframe is not the BiliBili homepage or in iframe, then don't show the iframe page
   if (!isHomePage(window.self.location.href) || isInIframe())
@@ -81,6 +89,7 @@ const iframePageURL = computed((): string => {
   }
   return ''
 })
+/** 是否显示 BewlyBewly 自定义页面（非原始 B 站页面、非 iframe） */
 const showBewlyPage = computed((): boolean => {
   if (isInIframe())
     return false
@@ -94,26 +103,27 @@ const showBewlyPage = computed((): boolean => {
 
   return isHomePage() && !settings.value.useOriginalBilibiliHomepage
 })
+/**
+ * 是否显示顶栏。
+ * 在抽屉模式、通知页面等场景下隐藏顶栏，避免重复或遮挡。
+ */
 const showTopBar = computed((): boolean => {
-  // When using the open in drawer feature, the iframe inside the page will hide the top bar
+  // 抽屉中打开的视频/番剧页不显示顶栏
   if (isVideoOrBangumiPage() && isInIframe())
     return false
 
-  // when user open the notifications page as a drawer, don't show the top bar
+  // 以抽屉模式打开通知页时不显示顶栏
   if (isNotificationPage() && settings.value.openNotificationsPageAsDrawer && isInIframe())
     return false
 
-  // When the user switches to the original Bilibili page, BewlyBewly will only show the top bar inside the iframe.
-  // This helps prevent the outside top bar from covering the contents.
+  // 使用原始 B 站首页时显示顶栏
+  // 在首页且不使用原始 B 站页面时显示顶栏
+  // 在 iframe 中使用原始 B 站页面时显示顶栏
+  // 非首页时显示顶栏
   // reference: https://github.com/BewlyBewly/BewlyBewly/issues/1235
-
-  // when using original bilibili homepage, show top bar
   return settings.value.useOriginalBilibiliHomepage
-  // when on home page and not using original bilibili page, show top bar
     || (isHomePage() && !settingsStore.getDockItemIsUseOriginalBiliPage(activatedPage.value) && !isInIframe())
-  // when in iframe and using original bilibili page, show top bar
     || (settingsStore.getDockItemIsUseOriginalBiliPage(activatedPage.value) && isInIframe())
-  // when not on home page, show top bar
     || !isHomePage()
 })
 
@@ -172,6 +182,7 @@ onMounted(() => {
   })
 })
 
+/** 处理标签栏点击：根据配置决定在新标签页打开或切换当前页面 */
 function handleDockItemClick(dockItem: DockItem) {
   // Opening in a new tab while still on the current tab doesn't require changing the `activatedPage`
   if (dockItem.openInNewTab) {
@@ -201,6 +212,7 @@ function handleDockItemClick(dockItem: DockItem) {
   }
 }
 
+/** 切换激活页面：若点击当前页面则刷新或回到顶部，否则切换 */
 function changeActivatePage(pageName: AppPage) {
   const osInstance = scrollbarRef.value?.osInstance()
   const scrollTop: number = osInstance.elements().viewport.scrollTop
@@ -217,6 +229,7 @@ function changeActivatePage(pageName: AppPage) {
   activatedPage.value = pageName
 }
 
+/** 滚动到顶部并显示顶栏 */
 function handleBackToTop(targetScrollTop = 0 as number) {
   const osInstance = scrollbarRef.value?.osInstance()
   if (osInstance) {
@@ -227,6 +240,7 @@ function handleBackToTop(targetScrollTop = 0 as number) {
   iframePageRef.value?.handleBackToTop()
 }
 
+/** 处理滚动事件：检测触底、回到顶部等状态 */
 function handleOsScroll() {
   emitter.emit(OVERLAY_SCROLL_BAR_SCROLL)
 
@@ -248,6 +262,7 @@ function handleOsScroll() {
     topBarRef.value?.handleScroll()
 }
 
+/** 在同源的情况下以抽屉形式打开链接，非同源则新标签页打开 */
 function openIframeDrawer(url: string) {
   const isSameOrigin = (origin: URL, destination: URL) =>
     origin.protocol === destination.protocol && origin.host === destination.host && origin.port === destination.port

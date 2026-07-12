@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 对话框组件，支持标题、描述、确认/取消操作，Esc/Enter 快捷键，以及加载状态
 import { onKeyStroke } from '@vueuse/core'
 
 import Button from '~/components/Button.vue'
@@ -72,6 +73,7 @@ onBeforeUnmount(() => {
   handleClose()
 })
 
+// 关闭对话框，加载且禁止关闭时返回
 function handleClose() {
   if (props.loading && props.preventCloseWhenLoading)
     return
@@ -82,6 +84,7 @@ function handleClose() {
   })
 }
 
+// 确认操作，非加载状态时自动关闭
 function handleConfirm() {
   emit('confirm')
   if (!props.loading) {

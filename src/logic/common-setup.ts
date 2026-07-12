@@ -1,3 +1,8 @@
+/**
+ * 通用 Vue 应用设置
+ * 初始化 Pinia、国际化、Toast 通知、组件注册等插件。
+ * 适用于 popup、选项页和 content-script 等多种上下文。
+ */
 import type { App } from 'vue'
 
 import { createPinia } from 'pinia'
@@ -10,6 +15,10 @@ import 'vue-toastification/dist/index.css'
 
 const pinia = createPinia()
 
+/**
+ * 为 Vue 应用安装所有必要的插件
+ * @param app - Vue 应用实例
+ */
 export async function setupApp(app: App) {
   const context = getCurrentContext()
 
@@ -22,14 +31,14 @@ export async function setupApp(app: App) {
   // Here you can install additional plugins for all contexts: popup, options page and content-script.
   // example: app.use(i18n)
   // example excluding content-script context: if (context !== 'content-script') app.use(i18n)
-  app.use(i18n)
+  app.use(i18n) // 国际化
   app
-    .use(Toast, {
+    .use(Toast, { // Toast 通知插件
       transition: 'Vue-Toastification__fade',
       maxToasts: 20,
       newestOnTop: true,
       position: POSITION.TOP_RIGHT,
     })
-  app.use(components)
-  app.use(pinia)
+  app.use(components) // 全局组件注册
+  app.use(pinia) // 状态管理
 }

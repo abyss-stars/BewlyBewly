@@ -2,8 +2,13 @@
 
 // import { getCookie, getUserID, setCookie } from '~/utils/main'
 
-/** Update the time interval of topbar notifications and moments counts */
-export const updateInterval = 1000 * 60 * 5 // Updated every 5 minutes
+/**
+ * 顶栏通知更新工具
+ * 控制通知和动态数量的轮询间隔
+ */
+
+/** 顶栏通知和动态数量的更新间隔（每5分钟更新一次） */
+export const updateInterval = 1000 * 60 * 5
 
 // const getLastID = (): string => `${getCookie(`bp_t_offset_${getUserID()}`)}`
 

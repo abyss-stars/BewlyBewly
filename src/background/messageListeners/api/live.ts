@@ -1,3 +1,7 @@
+/**
+ * 直播相关 API 定义
+ * 包含获取关注 UP 主的直播状态等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

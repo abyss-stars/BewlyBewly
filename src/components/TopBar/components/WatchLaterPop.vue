@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 稍后再看弹出面板
+ * 展示用户加入"稍后再看"的视频列表，支持删除操作
+ */
+
 import type { List as VideoItem, WatchLaterResult } from '~/models/video/watchLater'
 import Empty from '~/components/Empty.vue'
 import Loading from '~/components/Loading.vue'
@@ -20,18 +25,12 @@ onMounted(() => {
   getAllWatchLaterList()
 })
 
-/**
- * Return the URL of the watch later item
- * @param bvid bvid
- * @return {string} url
- */
+/** 根据 bvid 返回稍后再看视频的 URL */
 function getWatchLaterUrl(bvid: string): string {
   return `https://www.bilibili.com/list/watchlater?bvid=${bvid}`
 }
 
-/**
- * Get watch later list
- */
+/** 获取全部稍后再看列表 */
 function getAllWatchLaterList() {
   isLoading.value = true
   watchLaterList.length = 0
@@ -45,6 +44,7 @@ function getAllWatchLaterList() {
     })
 }
 
+/** 从稍后再看列表中删除指定项 */
 function deleteWatchLaterItem(index: number, aid: number) {
   api.watchlater.removeFromWatchLater({
     aid,

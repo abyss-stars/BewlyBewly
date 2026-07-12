@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 搜索栏组件，支持搜索建议、搜索历史、键盘导航、快捷键打开搜索等功能
 import type { HistoryItem, SuggestionItem, SuggestionResponse } from './searchHistoryProvider'
 import { onKeyStroke, useDebounceFn } from '@vueuse/core'
 
@@ -58,6 +59,7 @@ onKeyStroke('Escape', (e: KeyboardEvent) => {
   isFocus.value = false
 }, { target: keywordRef })
 
+// 输入时防抖获取搜索建议
 const handleInput = useDebounceFn(() => {
   selectedIndex.value = -1
   if (keyword.value.trim().length > 0) {
@@ -75,6 +77,7 @@ const handleInput = useDebounceFn(() => {
   }
 }, 200)
 
+// 跳转到 Bilibili 搜索结果页，根据设置决定打开方式（新标签/当前页）
 async function navigateToSearchResultPage(keyword: string) {
   if (keyword) {
     let target = '_blank'
@@ -94,10 +97,12 @@ async function navigateToSearchResultPage(keyword: string) {
   }
 }
 
+// 删除单条搜索历史
 async function handleDelete(value: string) {
   searchHistory.value = await removeSearchHistory(value)
 }
 
+// 上键：向上选择建议项或历史项
 function handleKeyUp(e: KeyboardEvent) {
   // Skip the key event triggered by IME
   if (e.isComposing)
@@ -128,6 +133,7 @@ function handleKeyUp(e: KeyboardEvent) {
   })
 }
 
+// 下键：向下选择建议项或历史项
 function handleKeyDown(e: KeyboardEvent) {
   // Skip the key event triggered by IME
   if (e.isComposing)
@@ -172,6 +178,7 @@ function handleKeyDown(e: KeyboardEvent) {
   })
 }
 
+// 回车键：执行搜索跳转，忽略 Shift+Enter 和输入法组合键
 function handleKeyEnter(e: KeyboardEvent) {
   if (!e.shiftKey && e.key === 'Enter' && !e.isComposing) {
     e.preventDefault()
@@ -179,6 +186,7 @@ function handleKeyEnter(e: KeyboardEvent) {
   }
 }
 
+// 清空所有搜索历史
 async function handleClearSearchHistory() {
   await clearAllSearchHistory()
   searchHistory.value = []

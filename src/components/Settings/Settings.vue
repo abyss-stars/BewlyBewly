@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 设置主页面
+ * 提供侧边导航菜单，通过异步组件切换不同设置子页面
+ */
+
 import type { MenuItem } from './types'
 import { useEventListener } from '@vueuse/core'
 
@@ -105,15 +110,18 @@ onMounted(() => {
   setCurrentTitle()
 })
 
+/** 触发关闭事件 */
 function handleClose() {
   emit('close')
 }
 
+/** 切换设置菜单项并更新标题 */
 function changeMenuItem(menuItem: MenuType) {
   activatedMenuItem.value = menuItem
   setCurrentTitle()
 }
 
+/** 根据当前激活的菜单项设置标题 */
 function setCurrentTitle() {
   settingsMenuItems.value.forEach((item) => {
     if (item.value === activatedMenuItem.value)

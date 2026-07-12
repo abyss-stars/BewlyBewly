@@ -1,3 +1,9 @@
+/**
+ * Bilibili URI 解析工具
+ * 解析 Bilibili 视频播放 URI 中的参数，判断视频是否为竖屏格式。
+ */
+
+/** Bilibili URI 中可能包含的播放参数 */
 interface BilibiliUri {
   cid: string | null
   player_height: number | null
@@ -8,6 +14,10 @@ interface BilibiliUri {
   trackid: string | null
 }
 
+/**
+ * 判断视频是否为竖屏视频
+ * 通过比较播放器高度和宽度来判断
+ */
 export function isVerticalVideo(uri: string): boolean {
   const bilibiliUri = parseBilibiliUri(uri)
   if (bilibiliUri.player_height == null || bilibiliUri.player_width == null)
@@ -16,6 +26,7 @@ export function isVerticalVideo(uri: string): boolean {
   return bilibiliUri.player_height > bilibiliUri.player_width
 }
 
+/** 解析 Bilibili 视频 URI 中的查询参数 */
 export function parseBilibiliUri(uri: string): BilibiliUri {
   const params = uri.split('?')[1]
   const searchParams = new URLSearchParams(params)

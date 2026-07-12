@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * Bewly/Bili 页面切换器
+ * 允许在 Bewly 定制页面和 Bilibili 原生页面之间切换当前频道页面
+ */
+
 import { useBewlyApp } from '~/composables/useAppProvider'
 import { IFRAME_PAGE_SWITCH_BEWLY, IFRAME_PAGE_SWITCH_BILI } from '~/constants/globalEvents'
 import { settings } from '~/logic'
@@ -35,6 +40,7 @@ const showBewlyOrBiliPageSwitcher = computed(() => {
   return false
 })
 
+/** 切换页面类型，若在 iframe 中则发送消息通知父页面 */
 function switchPage(useOriginalBiliPage: boolean) {
   const dockItem = settings.value.dockItemsConfig.find(dockItem => dockItem.page === activatedPage.value)
   if (dockItem) {

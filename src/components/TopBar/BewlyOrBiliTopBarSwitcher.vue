@@ -1,6 +1,12 @@
 <script setup lang="ts">
+/**
+ * Bewly/Bili 顶栏切换器
+ * 提供一个悬浮按钮，允许用户在 Bewly 和 Bilibili 原生顶栏之间切换
+ */
+
 import { settings } from '~/logic'
 
+/** 切换顶栏类型：Bewly 风格 <-> Bilibili 原生风格 */
 function toggleBewlyTopBar() {
   settings.value.useOriginalBilibiliTopBar = !settings.value.useOriginalBilibiliTopBar
   settings.value.showTopBar = !settings.value.showTopBar

@@ -1,3 +1,4 @@
+// 列表项组件，提供统一的列表项样式（奇偶行背景色、hover 效果）
 <script setup lang="ts">
 
 </script>

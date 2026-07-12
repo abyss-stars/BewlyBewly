@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 通用按钮组件，支持多种类型（primary/secondary/error等）、尺寸和自定义颜色
 interface Props {
   type?: | 'default'
     | 'primary'
@@ -21,6 +22,7 @@ defineProps<Props>()
 
 const emit = defineEmits(['click'])
 
+// 按钮点击事件处理
 function handleClick(evt: MouseEvent) {
   emit('click', evt)
 }

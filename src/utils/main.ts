@@ -1,4 +1,9 @@
 /**
+ * Bilibili 页面常用工具函数集合
+ * 包含 Cookie 操作、用户信息获取、URL 处理、颜色转换、版本比较、图片压缩等功能。
+ */
+
+/**
  * Get cookie by name
  * @param name cookie name
  * @returns cookie value
@@ -43,6 +48,7 @@ export function removeHttpFromUrl(url: string): string {
   return url.replace(/^https?:/, '')
 }
 
+/** 在新标签页中打开链接 */
 export function openLinkToNewTab(url: string, features: string = '') {
   window.open(url, '_blank', features)
 }
@@ -126,6 +132,7 @@ export function scrollToTop(element: HTMLElement, targetScrollTop = 0 as number)
   })
 }
 
+/** 向指定元素注入 CSS 样式，返回创建的 style 元素 */
 export function injectCSS(css: string, element: HTMLElement | ShadowRoot = document.documentElement): HTMLStyleElement {
   const el = document.createElement('style')
   el.setAttribute('rel', 'stylesheet')
@@ -293,6 +300,13 @@ export function compareVersions(version1: string, version2: string): number {
   return 0 // Versions are equal
 }
 
+/**
+ * 循环查询 DOM 直到找到匹配元素
+ * @param selector - CSS 选择器
+ * @param timeout - 查询间隔（毫秒）
+ * @param abort - 用于取消查询的 AbortController
+ * @returns Promise，找到时 resolve 元素，取消时 resolve null
+ */
 export function queryDomUntilFound(selector: string, timeout = 500, abort?: AbortController): Promise<HTMLElement | null> {
   return new Promise((resolve) => {
     const interval = setInterval(() => {

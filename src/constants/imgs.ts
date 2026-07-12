@@ -1,3 +1,9 @@
+/**
+ * 图片资源常量
+ * 定义搜索栏角色图片和壁纸资源列表
+ */
+
+/** 搜索栏角色图片列表，用于搜索栏装饰 */
 export const SEARCH_BAR_CHARACTERS: { name: string, url: string }[] = [
   { name: '22 娘', url: 'https://cdn.jsdelivr.net/gh/BewlyBewly/Imgs/searchBarCharacters/22chan-1.png' },
   { name: '33 娘', url: 'https://cdn.jsdelivr.net/gh/BewlyBewly/Imgs/searchBarCharacters/33chan-1.png' },
@@ -5,8 +11,10 @@ export const SEARCH_BAR_CHARACTERS: { name: string, url: string }[] = [
   { name: '33 娘', url: 'https://cdn.jsdelivr.net/gh/BewlyBewly/Imgs/searchBarCharacters/33chan-2.png' },
 ]
 
+/** 壁纸项类型定义 */
 export interface wallpaperItem { name: string, url: string, thumbnail?: string }
 
+/** 壁纸列表，供用户选择背景壁纸 */
 export const WALLPAPERS: wallpaperItem[] = [
   // {
   //   name: 'Unsplash Random Nature Image',

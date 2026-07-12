@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 设置项分组组件
+ * 将多个 SettingsItem 组合在一起，提供标题和描述
+ */
+
 defineProps<{
   title?: string
   desc?: string

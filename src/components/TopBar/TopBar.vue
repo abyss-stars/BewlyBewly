@@ -1,4 +1,10 @@
 <script setup lang="ts">
+/**
+ * Bewly 风格顶栏
+ * 包含 Logo 频道弹出、搜索栏、通知、动态、收藏、历史、稍后再看、上传和用户面板等功能
+ * 支持弹窗悬停交互和顶栏自动隐藏
+ */
+
 import type { Ref, UnwrapNestedRefs } from 'vue'
 import type { UnReadDm, UnReadMessage, UserInfo } from './types'
 
@@ -174,6 +180,7 @@ const popupVisible = reactive({
   more: false,
 })
 
+/** 关闭所有顶栏弹窗，可指定一个例外不关闭 */
 function closeAllTopBarPopup(exceptionKey?: keyof typeof popupVisible) {
   Object.keys(popupVisible).forEach((key) => {
     if (key !== exceptionKey)
@@ -221,6 +228,7 @@ const watchLaterTransformer = setupTopBarItemTransformer('watchLater')
 const uploadTransformer = setupTopBarItemTransformer('upload')
 const moreTransformer = setupTopBarItemTransformer('more')
 
+/** 设置弹窗的位置变换器，用于定位弹窗 */
 function setupTopBarItemTransformer(key: keyof typeof popupVisible) {
   const transformer = createTransformer(topBarItemElements[key], {
     x: '0px',
@@ -241,6 +249,7 @@ void watchLaterTransformer
 void uploadTransformer
 void moreTransformer
 
+/** 设置顶栏项悬停时的弹窗显示/隐藏逻辑 */
 function setupTopBarItemHoverEvent(key: keyof typeof popupVisible) {
   return useDelayedHover({
     enterDelay: 320,
@@ -257,6 +266,7 @@ function setupTopBarItemHoverEvent(key: keyof typeof popupVisible) {
 
 const currentClickedTopBarItem = ref<keyof typeof popupVisible | null>(null)
 
+/** 处理触屏模式下顶栏项点击：切换弹窗而非悬停显示 */
 function handleClickTopBarItem(event: MouseEvent, key: keyof typeof popupVisible) {
   if (settings.value.touchScreenOptimization) {
     event.preventDefault()
@@ -346,6 +356,7 @@ onUnmounted(() => {
   emitter.off(OVERLAY_SCROLL_BAR_SCROLL)
 })
 
+/** 初始化顶栏数据：获取用户信息并启动定时轮询 */
 async function initData() {
   await getUserInfo()
 
@@ -356,9 +367,10 @@ async function initData() {
   }, updateInterval)
 }
 
+/** 监听页面滚动，控制顶栏自动隐藏/显示 */
 function handleScroll() {
-  if (isHomePage() && !settings.value.useOriginalBilibiliHomepage) {
-    const osInstance = scrollbarRef.value?.osInstance()
+  const osInstance = scrollbarRef.value?.osInstance()
+  if (osInstance) {
     scrollTop.value = osInstance.elements().viewport.scrollTop as number
   }
   else {
@@ -379,6 +391,7 @@ function handleScroll() {
   oldScrollTop.value = scrollTop.value
 }
 
+/** 获取用户信息，更新登录状态 */
 async function getUserInfo() {
   try {
     const res = await api.user.getUserInfo()
@@ -405,10 +418,8 @@ const unReadMessage = reactive<UnReadMessage | NonNullable<unknown>>(
 const unReadDm = reactive<UnReadDm>({} as UnwrapNestedRefs<UnReadDm>)
 const unReadMessageCount = ref<number>(0)
 
+/** 获取未读消息计数，排除 up 主投稿和回复点赞 */
 async function getUnreadMessageCount() {
-  if (!isLogin.value)
-    return
-
   let result = 0
 
   try {
@@ -440,6 +451,7 @@ async function getUnreadMessageCount() {
 }
 
 const notificationsDrawerUrl = ref<string>('https://message.bilibili.com/')
+/** 处理通知项点击，若开启了 Drawer 模式则在侧边打开 */
 function handleNotificationsItemClick(item: { name: string, url: string, unreadCount: number, icon: string }) {
   if (settings.value.openNotificationsPageAsDrawer) {
     drawerVisible.notifications = true
@@ -451,12 +463,9 @@ function handleNotificationsItemClick(item: { name: string, url: string, unreadC
 // #region Moments
 const newMomentsCount = ref<number>(0)
 
+/** 获取动态更新计数 */
 async function getTopBarNewMomentsCount() {
-  if (!isLogin.value)
-    return
-
   let result = 0
-
   try {
     const res = await api.moment.getTopBarNewMomentsCount()
     if (res.code === 0) {
@@ -475,8 +484,8 @@ onKeyStroke('/', () => {
   toggleTopBarVisible(true)
 })
 
+/** 切换顶栏可见性并广播事件 */
 function toggleTopBarVisible(visible: boolean) {
-  hideTopBar.value = !visible
   emitter.emit(TOP_BAR_VISIBILITY_CHANGE, visible)
 }
 

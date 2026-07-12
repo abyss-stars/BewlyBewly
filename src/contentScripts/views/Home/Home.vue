@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 首页组件。
+ * 管理首页的标签页切换（推荐、关注、订阅系列、热门、排行榜、直播），
+ * 支持搜索页模式、网格布局切换和标签页的显示/隐藏。
+ */
 import type { GridLayoutIcon } from './types'
 
 import type { HomeTab } from '~/stores/mainStore'
@@ -15,7 +20,9 @@ const mainStore = useMainStore()
 const { handleBackToTop, scrollbarRef } = useBewlyApp()
 const handleThrottledBackToTop = useThrottleFn((targetScrollTop: number = 0) => handleBackToTop(targetScrollTop), 1000)
 
+/** 当前激活的首页子页面 */
 const activatedPage = ref<HomeSubPage>(HomeSubPage.ForYou)
+/** 各首页子页面的异步组件映射 */
 const pages = {
   [HomeSubPage.ForYou]: defineAsyncComponent(() => import('./components/ForYou.vue')),
   [HomeSubPage.Following]: defineAsyncComponent(() => import('./components/Following.vue')),
@@ -25,11 +32,15 @@ const pages = {
   [HomeSubPage.Live]: defineAsyncComponent(() => import('./components/Live.vue')),
 }
 const showSearchPageMode = ref<boolean>(false)
+/** 标签栏是否随顶栏隐藏而上移 */
 const shouldMoveTabsUp = ref<boolean>(false)
+/** 标签页内容是否正在加载 */
 const tabContentLoading = ref<boolean>(false)
+/** 当前显示的标签页列表（根据可见性配置计算） */
 const currentTabs = ref<HomeTab[]>([])
 const tabPageRef = ref()
 const topBarVisibility = ref<boolean>(false)
+/** 网格布局切换图标配置 */
 const gridLayoutIcons = computed((): GridLayoutIcon[] => {
   return [
     { icon: 'i-mingcute:table-3-line', iconActivated: 'i-mingcute:table-3-fill', value: 'adaptive' },
@@ -43,6 +54,7 @@ watch(() => JSON.stringify(settings.value.homePageTabVisibilityList), () => {
   currentTabs.value = computeTabs()
 })
 
+/** 根据设置中的可见性配置计算显示的标签页列表 */
 function computeTabs(): HomeTab[] {
   // if homePageTabVisibilityList not fresh , set it to default
   if (!settings.value.homePageTabVisibilityList.length || settings.value.homePageTabVisibilityList.length !== mainStore.homeTabs.length)
@@ -100,6 +112,11 @@ onUnmounted(() => {
   emitter.off(TOP_BAR_VISIBILITY_CHANGE)
 })
 
+/**
+ * 处理标签页切换：
+ * 如果点击当前标签页，则在顶部时刷新数据，否则回到顶部；
+ * 如果点击不同标签页，则切换页面并回到顶部。
+ */
 function handleChangeTab(tab: HomeTab) {
   if (activatedPage.value === tab.page) {
     const osInstance = scrollbarRef.value?.osInstance()

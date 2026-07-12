@@ -4,9 +4,19 @@ import { LanguageType } from '~/enums/appEnums'
 import { accessKey, settings } from '~/logic'
 import { getUserID, injectCSS } from '~/utils/main'
 
+/**
+ * 设置必要的设置监听器
+ * 为各项用户设置创建 watch 监听，包括语言、字体、毛玻璃效果、阴影、广告拦截等，
+ * 当设置变更时自动应用对应的 DOM 样式变化。
+ */
 export function setupNecessarySettingsWatchers() {
   const { locale } = useI18n()
 
+  /**
+   * 监听语言设置变化
+   * 首次加载时根据浏览器语言自动设置默认语言，
+   * 并同步更新 document 的 lang 属性和 vue-i18n 的 locale
+   */
   watch(
     () => settings.value.language,
     async () => {
@@ -49,6 +59,10 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /**
+   * 监听字体设置变化
+   * 根据用户选择应用默认字体、推荐字体或自定义字体
+   */
   watch(
     [() => settings.value.customizeFont, () => settings.value.fontFamily],
     () => {
@@ -79,6 +93,7 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听弹幕字体覆盖设置，启用时将弹幕字体设为自定义字体 */
   let danmakuFontStyleEl: HTMLStyleElement | null = null
   watch(
     () => settings.value.overrideDanmakuFont,
@@ -97,6 +112,7 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 预设的中文标点缩进移除样式元素 */
   const removeTheIndentFromChinesePunctuationStyleEl = injectCSS(`
     .video-info-container .special-text-indent[data-title^='“'],a[title^='“'],p[title^='“'],h3[title^='“'],
     .video-info-container .special-text-indent[data-title^='《'],a[title^='《'],p[title^='《'],h3[title^='《'],
@@ -106,6 +122,7 @@ export function setupNecessarySettingsWatchers() {
       text-indent: 0 !important;
     }
   `)
+  /** 监听中文标点缩进移除设置，控制是否将预定义的 CSS 样式插入/移除页面 */
   watch(
     () => settings.value.removeTheIndentFromChinesePunctuation,
     () => {
@@ -119,8 +136,8 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听毛玻璃效果禁用设置 */
   watch(
-    () => settings.value.disableFrostedGlass,
     () => {
       const bewlyElement = document.querySelector('#bewly') as HTMLElement
       if (settings.value.disableFrostedGlass) {
@@ -141,8 +158,8 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听毛玻璃模糊减弱设置 */
   watch(
-    () => settings.value.reduceFrostedGlassBlur,
     () => {
       const bewlyElement = document.querySelector('#bewly') as HTMLElement
       if (settings.value.reduceFrostedGlassBlur) {
@@ -161,6 +178,7 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听阴影禁用设置，在页面和 Bewly 元素上添加/移除 disable-shadow 类 */
   watch(() => settings.value.disableShadow, (newValue) => {
     const bewlyElement = document.querySelector('#bewly') as HTMLElement
     if (newValue) {
@@ -177,6 +195,7 @@ export function setupNecessarySettingsWatchers() {
     }
   }, { immediate: true })
 
+  /** 监听广告拦截设置，切换页面上的广告屏蔽样式 */
   watch(() => settings.value.blockAds, () => {
     // Do not use the "ads" keyword. AdGuard, AdBlock, and some ad-blocking extensions will
     // detect and remove it when the class name contains "ads"
@@ -189,11 +208,13 @@ export function setupNecessarySettingsWatchers() {
   /**
    * 搜尋結果的上方的廣告，但有時是年末總結、年度報告這些
    */
+  /** 预置搜索页顶部广告屏蔽样式元素 */
   const blockTopSearchPageAdsStyleEl = injectCSS(`
     .activity-game-list {
       display: none !important;
     }
   `)
+  /** 监听搜索页顶部广告屏蔽设置，控制广告元素的显示/隐藏 */
   watch(() => settings.value.blockTopSearchPageAds, () => {
     if (settings.value.blockTopSearchPageAds)
       document.documentElement.appendChild(blockTopSearchPageAdsStyleEl)
@@ -201,8 +222,8 @@ export function setupNecessarySettingsWatchers() {
       document.documentElement.removeChild(blockTopSearchPageAdsStyleEl)
   }, { immediate: true })
 
+  /** 监听主题色设置，修改页面和 Bewly 元素的 CSS --bew-theme-color 变量 */
   watch(
-    () => settings.value.themeColor,
     () => {
       const bewlyElement = document.querySelector('#bewly') as HTMLElement
       if (bewlyElement) {
@@ -214,8 +235,10 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 自定义 CSS 样式元素引用 */
   let styleEL: HTMLStyleElement | null = null
   let bewlyStyleEL: HTMLStyleElement | null = null
+  /** 监听自定义 CSS 设置，注入/移除用户自定义的 CSS 到页面和 Shadow DOM */
   watch(
     [() => settings.value.customizeCSS, () => settings.value.customizeCSSContent],
     () => {
@@ -243,8 +266,8 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听 accessKey 变化，未登录时自动清空 accessKey */
   watch(
-    () => accessKey.value,
     () => {
       // Clear accessKey if not logged in
       if (!getUserID())
@@ -253,8 +276,8 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听 showTopBar 设置，与 useOriginalBilibiliTopBar 互斥同步 */
   watch(
-    () => settings.value.showTopBar,
     (newVal) => {
       if (newVal)
         settings.value.useOriginalBilibiliTopBar = false
@@ -263,8 +286,8 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听 useOriginalBilibiliTopBar 设置，控制顶部栏的显示/隐藏 */
   watch(
-    () => settings.value.useOriginalBilibiliTopBar,
     (newVal) => {
       if (newVal)
         settings.value.showTopBar = false
@@ -274,8 +297,8 @@ export function setupNecessarySettingsWatchers() {
     { immediate: true },
   )
 
+  /** 监听其他页面样式适配设置，在根元素上添加/移除 bewy-design 类 */
   watch(
-    () => settings.value.adaptToOtherPageStyles,
     () => {
       if (settings.value.adaptToOtherPageStyles)
         document.documentElement.classList.add('bewly-design')

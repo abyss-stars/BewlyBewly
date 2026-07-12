@@ -1,3 +1,7 @@
+/**
+ * 收藏相关 API 定义
+ * 包含收藏夹列表、收藏内容、批量删除收藏等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

@@ -1,3 +1,5 @@
+/** Bilibili 视频播放流预览 API 返回模型 */
+
 export interface VideoPreviewResult {
   code: number
   message: string
@@ -5,6 +7,7 @@ export interface VideoPreviewResult {
   data: Data
 }
 
+/** 视频流数据 */
 export interface Data {
   from: string
   result: string
@@ -26,6 +29,7 @@ export interface Data {
   last_play_cid: number
 }
 
+/** 视频分段 URL */
 export interface Durl {
   order: number
   length: number
@@ -36,6 +40,7 @@ export interface Durl {
   backup_url: null
 }
 
+/** 支持的清晰度格式 */
 export interface SupportFormat {
   quality: number
   format: string
@@ -45,6 +50,7 @@ export interface SupportFormat {
   codecs: null
 }
 
+/** 音量信息（响度归一化） */
 export interface Volume {
   measured_i: number
   measured_lra: number

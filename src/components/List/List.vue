@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 列表容器组件，支持首项高亮和首项置顶
 withDefaults(defineProps<{
   highlightFirst?: boolean
   pinTop?: boolean

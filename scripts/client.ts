@@ -1,5 +1,11 @@
+/**
+ * Vite HMR 客户端脚本
+ * 负责建立 WebSocket 连接、处理热更新消息、管理模块热替换上下文。
+ * 基于 Vite 内置 HMR 客户端，针对扩展开发环境做定制（自定义端口 3303）。
+ */
 import type { ErrorPayload, HMRPayload, InferCustomEventPayload, Update } from 'vite'
 
+/** Vite 热更新上下文接口，提供模块热替换的 API */
 interface ViteHotContext {
   readonly data: any
   accept: (() => void) & ((cb: (mod: any) => void) => void) & ((dep: string, cb: (mod: any) => void) => void) & ((deps: readonly string[], cb: (mods: any[]) => void) => void)
@@ -17,30 +23,36 @@ interface ViteHotContext {
 
 console.debug('[vite] connecting...')
 
-// use server configuration, then fallback to inference
+// WebSocket 连接配置（扩展开发环境使用固定端口 3303）
 const socketProtocol = location.protocol === 'https:' ? 'wss' : 'ws'
 const socketHost = 'localhost:3303'
 const base = '/'
 const messageBuffer: string[] = []
 const enableOverlay = true
 
+// 热更新模块映射表：模块路径 -> HotModule
 const hotModulesMap = new Map<string, HotModule>()
+// dispose 回调映射表：模块卸载时调用
 const disposeMap = new Map<string, (data: any) => void | Promise<void>>()
+// prune 回调映射表：模块被裁剪时调用
 const pruneMap = new Map<string, (data: any) => void | Promise<void>>()
+// 模块上下文数据映射表
 const dataMap = new Map<string, any>()
+// 全局自定义事件监听器映射表
 const customListenersMap = new Map<string, ((data: any) => void)[]>()
+// 上下文专属事件监听器映射表
 const ctxToListenersMap = new Map<string, Map<string, ((data: any) => void)[]>>()
 
 let socket: WebSocket
 try {
   socket = new WebSocket(`${socketProtocol}://${socketHost}`, 'vite-hmr')
 
-  // Listen for messages
+  // 监听服务端推送的 HMR 消息
   socket.addEventListener('message', async ({ data }) => {
     handleMessage(JSON.parse(data))
   })
 
-  // ping server
+  // 连接断开时轮询等待服务端重启
   socket.addEventListener('close', async ({ wasClean }) => {
     if (wasClean)
       return
@@ -53,6 +65,7 @@ catch (error) {
   console.error(`[vite] failed to connect to websocket (${error}). `)
 }
 
+/** 模块 fetch 失败时的警告提示 */
 function warnFailedFetch(err: Error, path: string | string[]) {
   if (!err.message.match('fetch'))
     console.error(err)
@@ -64,6 +77,7 @@ function warnFailedFetch(err: Error, path: string | string[]) {
   )
 }
 
+/** 清理 URL，移除 `direct` 查询参数 */
 function cleanUrl(pathname: string): string {
   const url = new URL(pathname, location.toString())
   url.searchParams.delete('direct')
@@ -72,21 +86,27 @@ function cleanUrl(pathname: string): string {
 
 let isFirstUpdate = true
 
+/**
+ * 处理服务端推送的 HMR 消息
+ * - connected: 连接建立，发送缓冲消息并启动心跳
+ * - update: 模块更新，执行 JS/CSS 热替换
+ * - custom: 自定义事件透传
+ * - full-reload: 全量刷新
+ * - prune: 裁剪不再使用的模块
+ * - error: 服务端编译错误展示
+ */
 async function handleMessage(payload: HMRPayload) {
   switch (payload.type) {
     case 'connected':
       console.debug('[vite] connected.')
       sendMessageBuffer()
-      // proxy(nginx, docker) hmr ws maybe caused timeout,
-      // so send ping package let ws keep alive.
+      // 代理环境下 ws 可能超时，定期发送心跳包保持连接
       setInterval(() => socket.send('{"type":"ping"}'), 5000)
       break
     case 'update':
       notifyListeners('vite:beforeUpdate', payload)
-      // if this is the first update and there's already an error overlay, it
-      // means the page opened with existing server compile error and the whole
-      // module script failed to load (since one of the nested imports is 500).
-      // in this case a normal update won't work and a full reload is needed.
+      // 首次更新时，如果页面存在错误遮罩，说明之前的编译错误导致模块加载失败，
+      // 此时热更新无法正常工作，需要强制刷新页面
       if (isFirstUpdate && hasErrorOverlay()) {
         window.location.reload()
         return
@@ -169,6 +189,7 @@ async function handleMessage(payload: HMRPayload) {
   }
 }
 
+/** 通知所有自定义事件监听器 */
 function notifyListeners<T extends string>(event: T, data: InferCustomEventPayload<T>): void
 function notifyListeners(event: string, data: any): void {
   const cbs = customListenersMap.get(event)
@@ -176,19 +197,19 @@ function notifyListeners(event: string, data: any): void {
     cbs.forEach(cb => cb(data))
 }
 
+/** 创建错误遮罩（当前禁用，使用 Vite 内置 overlay） */
 function createErrorOverlay(_err: ErrorPayload['err']) {
   if (!enableOverlay)
     return
   clearErrorOverlay()
-  // document.body.appendChild(new ErrorOverlay(err))
 }
 
+/** 清除错误遮罩 */
 function clearErrorOverlay() {
-  // document.querySelectorAll(overlayId).forEach(n => (n as ErrorOverlay).close())
 }
 
+/** 检查是否存在错误遮罩 */
 function hasErrorOverlay() {
-  // return document.querySelectorAll(overlayId).length
   return false
 }
 
@@ -196,9 +217,8 @@ let pending = false
 let queued: Promise<(() => void) | undefined>[] = []
 
 /**
- * buffer multiple hot updates triggered by the same src change
- * so that they are invoked in the same order they were sent.
- * (otherwise the order may be inconsistent because of the http request round trip)
+ * 将多个由同一文件变更触发的热更新请求排队，
+ * 按发送顺序依次执行（避免因 HTTP 请求往返时间不同导致顺序错乱）
  */
 async function queueUpdate(p: Promise<(() => void) | undefined>) {
   queued.push(p)
@@ -212,22 +232,23 @@ async function queueUpdate(p: Promise<(() => void) | undefined>) {
   }
 }
 
+/**
+ * 轮询检测 Vite 开发服务器是否已重启
+ * 对 WebSocket 地址发起 fetch 请求：成功返回 400（正常）、网络错误则重试
+ */
 async function waitForSuccessfulPing(ms = 1000) {
   while (true) {
     try {
-      // A fetch on a websocket URL will return a successful promise with status 400,
-      // but will reject a networking error.
       await fetch(`${location.protocol}//${socketHost}`)
       break
     }
     catch {
-      // wait ms before attempting to ping again
       await new Promise(resolve => setTimeout(resolve, ms))
     }
   }
 }
 
-// https://wicg.github.io/construct-stylesheets
+// 检测浏览器是否支持 Constructable Stylesheets（CSSStyleSheet）
 const supportsConstructedSheet = (() => {
   // TODO: re-enable this try block once Chrome fixes the performance of
   // rule insertion in really big stylesheets
@@ -240,6 +261,10 @@ const supportsConstructedSheet = (() => {
 
 const sheetsMap = new Map()
 
+/**
+ * 更新/注入样式模块
+ * 优先使用 Constructable Stylesheets（更高效），不支持时回退到 <style> 标签
+ */
 export function updateStyle(id: string, content: string): void {
   let style = sheetsMap.get(id)
   if (supportsConstructedSheet && !content.includes('@import')) {
@@ -276,6 +301,7 @@ export function updateStyle(id: string, content: string): void {
   sheetsMap.set(id, style)
 }
 
+/** 移除指定 ID 的样式模块 */
 export function removeStyle(id: string): void {
   const style = sheetsMap.get(id)
   if (style) {
@@ -289,15 +315,17 @@ export function removeStyle(id: string): void {
   }
 }
 
+/**
+ * 执行模块的热更新
+ * 找到受影响的模块，重新导入并执行回调
+ */
 async function fetchUpdate({ path, acceptedPath, timestamp }: Update) {
   let mod = hotModulesMap.get(path)
   if (!mod) {
     mod = hotModulesMap.get(path.replace(/\.js$/, ''))
 
     if (!mod) {
-      // In a code-splitting project,
-      // it is common that the hot-updating module is not loaded yet.
-      // https://github.com/vitejs/vite/issues/721
+      // 代码分割项目中，尚未加载的模块无法热更新
       return
     }
 
@@ -308,10 +336,9 @@ async function fetchUpdate({ path, acceptedPath, timestamp }: Update) {
   const moduleMap = new Map()
   const isSelfUpdate = path === acceptedPath
 
-  // make sure we only import each dep once
+  // 去重，确保每个依赖只导入一次
   const modulesToUpdate = new Set<string>()
   if (isSelfUpdate) {
-    // self update - only update self
     modulesToUpdate.add(path)
   }
   else {
@@ -356,12 +383,14 @@ async function fetchUpdate({ path, acceptedPath, timestamp }: Update) {
   }
 }
 
+/** 确保脚本 URL 以 .js 结尾并追加时间戳用于缓存破坏 */
 function normalizeScriptUrl(url: string, timestamp: number) {
   if (!url.endsWith('.js') && !url.endsWith('.mjs'))
     url = `${url}.js`
   return `${url}?t=${timestamp}`
 }
 
+/** 发送缓冲区中积压的消息 */
 function sendMessageBuffer() {
   if (socket.readyState === 1) {
     messageBuffer.forEach(msg => socket.send(msg))
@@ -380,17 +409,20 @@ interface HotCallback {
   fn: (modules: object[]) => void
 }
 
+/**
+ * 为指定模块创建热更新上下文
+ * 每个模块在热更新时会创建新上下文，清理旧的回调函数和事件监听器
+ */
 export function createHotContext(ownerPath: string): ViteHotContext {
   if (!dataMap.has(ownerPath))
     dataMap.set(ownerPath, {})
 
-  // when a file is hot updated, a new context is created
-  // clear its stale callbacks
+  // 热更新时清除该模块的旧回调
   const mod = hotModulesMap.get(ownerPath)
   if (mod)
     mod.callbacks = []
 
-  // clear stale custom event listeners
+  // 清除该模块的旧自定义事件监听器
   const staleListeners = ctxToListenersMap.get(ownerPath)
   if (staleListeners) {
     for (const [event, staleFns] of staleListeners) {
@@ -480,14 +512,14 @@ export function createHotContext(ownerPath: string): ViteHotContext {
 }
 
 /**
- * urls here are dynamic import() urls that couldn't be statically analyzed
+ * 向动态 import 的 URL 中注入额外查询参数
+ * 用于不能静态分析的动态导入路径，追加时间戳实现缓存破坏
  */
 export function injectQuery(url: string, queryToInject: string): string {
-  // skip urls that won't be handled by vite
+  // 跳过非相对/绝对路径的 URL（外部 CDN 等）
   if (!url.startsWith('.') && !url.startsWith('/'))
     return url
 
-  // can't use pathname from URL since it may be relative like ../
   const pathname = url.replace(/#.*$/, '').replace(/\?.*$/, '')
   const { search, hash } = new URL(url, 'http://vitejs.dev')
 

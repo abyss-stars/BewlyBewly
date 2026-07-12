@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 水平滚动容器组件，将鼠标滚轮的垂直滚动转换为水平滚动
 import type { Ref } from 'vue'
 
 import { settings } from '~/logic'
@@ -34,6 +35,7 @@ onMounted(() => {
   // })
 })
 
+// 将垂直滚轮事件转换为水平滚动
 function handleMouseScroll(event: WheelEvent) {
   event.preventDefault()
   scrollListWrap.value.scrollLeft += event.deltaY

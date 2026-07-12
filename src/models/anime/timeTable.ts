@@ -1,9 +1,12 @@
+/** Bilibili 番剧时间表 API 返回模型 */
+
 export interface TimetableResult {
   code: number
   message: string
   result: Result[]
 }
 
+/** 按天分组的时间表 */
 export interface Result {
   date: string
   date_ts: number
@@ -12,6 +15,7 @@ export interface Result {
   is_today: number
 }
 
+/** 当天更新的剧集信息 */
 export interface Episode {
   cover: string
   delay: number

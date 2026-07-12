@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 番剧卡片组件，展示番剧封面、标题、描述、排名、标签等信息，支持 hover 动效
 import { useDark } from '~/composables/useDark'
 import { useMainStore } from '~/stores/mainStore'
 import { numFormatter } from '~/utils/dataFormatter'
@@ -34,6 +35,7 @@ interface Bangumi {
 const { isDark } = useDark()
 const { setActivatedCover } = useMainStore()
 
+// 鼠标进入时设置激活封面，用于背景模糊封面展示
 function handleMouseEnter(bangumi: Bangumi) {
   setActivatedCover(`${removeHttpFromUrl(bangumi.cover)}@466w_622h.webp`)
 }

@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 桌面和 Dock 设置页面
+ * 管理顶栏、Dock（导航栏）和侧边栏的外观与行为设置
+ */
+
 import type { DockItem } from '~/stores/mainStore'
 import { useI18n } from 'vue-i18n'
 
@@ -79,6 +84,7 @@ watch(() => settings.value.autoHideDock, (newValue) => {
     settings.value.halfHideDock = false
 })
 
+/** 重置 Dock 内容为默认配置 */
 function resetDockContent() {
   settings.value.dockItemsConfig = mainStore.dockItems.map((e: DockItem) => {
     return {
@@ -90,6 +96,7 @@ function resetDockContent() {
   })
 }
 
+/** 切换 Dock 项的可见性，至少保留一个可见 */
 function handleToggleDockItem(dockItem: any) {
   // Prevent disabling all dock items if there is only one
   if (settings.value.dockItemsConfig.filter(dockItem => dockItem.visible === true).length > 1)

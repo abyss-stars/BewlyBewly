@@ -1,3 +1,8 @@
+/**
+ * BewlyBewly 内容脚本入口文件。
+ * 负责判断当前页面是否受支持，注入 Vue 应用到页面中，
+ * 并通过 Shadow DOM 隔离样式，替换或增强 B 站原有页面。
+ */
 import { createApp } from 'vue'
 import { useDark } from '~/composables/useDark'
 
@@ -17,7 +22,7 @@ import 'uno.css'
 
 const isFirefox: boolean = /Firefox/i.test(navigator.userAgent)
 
-// Fix `OverlayScrollbars` not working in Firefox
+// 修复 Firefox 中 `OverlayScrollbars` 不工作的问题
 // https://github.com/fingerprintjs/fingerprintjs/issues/683#issuecomment-881210244
 if (isFirefox) {
   window.requestIdleCallback = window.requestIdleCallback.bind(window)
@@ -30,6 +35,10 @@ if (isFirefox) {
 
 const currentUrl = document.URL
 
+/**
+ * 判断当前页面是否为 BewlyBewly 支持的 B 站页面。
+ * 包括首页、视频/番剧页、搜索页、动态页、历史记录、稍后再看、空间页等。
+ */
 function isSupportedPages(): boolean {
   if (isInIframe())
     return false
@@ -85,6 +94,10 @@ function isSupportedPages(): boolean {
   }
 }
 
+/**
+ * 判断当前 iframe 内页面是否受支持。
+ * 用于"在抽屉中打开"功能，在 iframe 内渲染特定 B 站页面。
+ */
 export function isSupportedIframePages(): boolean {
   if (
     isInIframe()
@@ -137,6 +150,7 @@ if (isSupportedPages() || isSupportedIframePages()) {
   }
 }
 
+// 首页加载前隐藏原始 body，避免原始内容闪烁，同时添加背景色过渡
 if (settings.value.adaptToOtherPageStyles && isHomePage()) {
   beforeLoadedStyleEl = injectCSS(`
     html.bewly-design {
@@ -149,7 +163,7 @@ if (settings.value.adaptToOtherPageStyles && isHomePage()) {
     }
   `)
 
-  // Add opacity transition effect for page loaded
+  // 页面加载后添加透明度过渡效果
   injectCSS(`
     body {
       transition: opacity 0.5s;
@@ -157,15 +171,21 @@ if (settings.value.adaptToOtherPageStyles && isHomePage()) {
   `)
 }
 
+// BewlyBewly 挂载完成后，移除加载前的隐藏样式
 window.addEventListener(BEWLY_MOUNTED, () => {
   if (beforeLoadedStyleEl)
     document.documentElement.removeChild(beforeLoadedStyleEl)
 })
 
-// Set the original Bilibili top bar to `display: none` to prevent it from showing before the load
+// 隐藏原始 B 站顶栏，防止在 BewlyBewly 加载前闪现
 // see: https://github.com/BewlyBewly/BewlyBewly/issues/967
 const removeOriginalTopBar = injectCSS(`.bili-header, #biliMainHeader { visibility: hidden !important; }`)
 
+/**
+ * DOM 加载完成后执行：
+ * 1. 如果设置了替换首页，清空 body 并仅保留原始顶栏
+ * 2. 注入 Vue 应用到页面中
+ */
 async function onDOMLoaded() {
   let originalTopBar: HTMLElement | null = null
 
@@ -217,6 +237,7 @@ if (document.readyState !== 'loading')
 else
   document.addEventListener('DOMContentLoaded', () => onDOMLoaded())
 
+/** 在浏览器空闲时注入应用（非首页页面延迟注入以优化性能） */
 function injectAppWhenIdle() {
   return new Promise<void>((resolve) => {
     // Inject app when idle
@@ -227,9 +248,15 @@ function injectAppWhenIdle() {
   })
 }
 
+/**
+ * 注入 BewlyBewly 应用到页面。
+ * - 移除旧版本的 bewly 元素（仅保留开发模式或更高版本的）
+ * - 创建 Shadow DOM 容器隔离样式
+ * - 挂载 Vue 应用
+ */
 function injectApp() {
-  // Remove bewly element if it already exists and the version is less than the current version
-  // Only the development mode bewly element remains
+  // 如果已存在 bewly 元素且版本低于当前版本，则移除
+  // 仅保留开发模式的 bewly 元素
   const bewlyElArr: NodeListOf<Element> = document.querySelectorAll('#bewly')
   if (bewlyElArr.length > 0) {
     // alert(`

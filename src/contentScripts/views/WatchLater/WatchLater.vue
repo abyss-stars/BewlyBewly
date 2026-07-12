@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 稍后再看页面组件。
+ * 展示用户"稍后再看"列表，支持分批加载、删除单条、清空全部、
+ * 移除已看视频和在当前标签页/新标签页/抽屉中打开视频。
+ */
 import type { List as VideoItem, WatchLaterResult } from '~/models/video/watchLater'
 import { useDateFormat } from '@vueuse/core'
 
@@ -16,8 +21,11 @@ const { setActivatedCover } = useMainStore()
 
 const isLoading = ref<boolean>()
 const noMoreContent = ref<boolean>()
+/** 完整的稍后再看列表 */
 const allWatchLaterList = ref<VideoItem[]>([])
+/** 当前显示的分页列表 */
 const currentWatchLaterList = ref<VideoItem[]>([])
+/** 稍后再看视频总数 */
 const watchLaterCount = ref<number>(0)
 const { handlePageRefresh, handleReachBottom, haveScrollbar } = useBewlyApp()
 const pageNum = ref<number>(1)
@@ -37,6 +45,7 @@ async function initData() {
   getData()
 }
 
+/** 加载当前分页的稍后再看数据 */
 function getData() {
   getCurrentWatchLaterList()
 }
@@ -55,7 +64,7 @@ function initPageAction() {
 }
 
 /**
- * Get watch later list
+ * 获取完整的稍后再看列表（一次性全部获取）
  */
 async function getAllWatchLaterList() {
   isLoading.value = true
@@ -72,6 +81,7 @@ async function getAllWatchLaterList() {
   }
 }
 
+/** 从完整列表中截取当前页的数据（每页 10 条） */
 async function getCurrentWatchLaterList() {
   const allWatchLaterListCopy = JSON.parse(JSON.stringify(allWatchLaterList.value))
   const currentList = allWatchLaterListCopy.slice((pageNum.value - 1) * 10, pageNum.value * 10)
@@ -138,15 +148,16 @@ function handlePlayAll() {
   openLinkToNewTab('https://www.bilibili.com/list/watchlater')
 }
 
+/** 根据用户设置决定视频链接打开方式：抽屉 / 当前标签页 / 新标签页 */
 function handleLinkClick(url: string) {
   if (settings.value.videoCardLinkOpenMode === 'drawer') {
-    openIframeDrawer(url) // 在抽屉打开
+    openIframeDrawer(url)
   }
   else if (settings.value.videoCardLinkOpenMode === 'currentTab') {
-    window.open(url, '_self') // 在当前标签页打开
+    window.open(url, '_self')
   }
   else {
-    openLinkToNewTab(url) // 在新标签页打开
+    openLinkToNewTab(url)
   }
 }
 

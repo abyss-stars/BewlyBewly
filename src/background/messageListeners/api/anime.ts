@@ -1,3 +1,7 @@
+/**
+ * 番剧相关 API 定义
+ * 包含热门番剧、追番列表、推荐番剧、时间表、番剧详情等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

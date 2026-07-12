@@ -1,3 +1,11 @@
+/**
+ * 暗色模式 Composable
+ * 管理应用的暗色/亮色模式切换，包括：
+ * - 跟随系统主题自动切换
+ * - 手动切换主题（支持 ViewTransition 动画）
+ * - 同步设置到 Bilibili 的 cookie 和 CSS 类名
+ * - 通过自定义事件通知其他脚本主题变化
+ */
 import { usePreferredDark } from '@vueuse/core'
 
 import { settings } from '~/logic'
@@ -94,6 +102,11 @@ export function useDark() {
     // }
   }
 
+  /**
+   * 切换暗色/亮色模式
+   * 支持 ViewTransition API 的圆形扩展动画效果
+   * @param e - 鼠标事件，用于计算动画起始圆心位置
+   */
   function toggleDark(e: MouseEvent) {
     const updateThemeSettings = () => {
       if (currentAppColorScheme.value !== currentSystemColorScheme.value)

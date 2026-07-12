@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 加载中组件，显示加载动画 GIF 和加载文字
 import browser from 'webextension-polyfill'
 
 const imgURL = browser.runtime.getURL('/assets/loading.gif')

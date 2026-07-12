@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 视频作者名称组件，支持单人作者和联合投稿显示
 import type { Author } from '../../types'
 
 import { getAuthorJumpUrl } from '~/components/VideoCard/utils'

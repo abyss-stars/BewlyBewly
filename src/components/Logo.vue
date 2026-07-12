@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Logo 组件，显示 BewlyBewly 的 SVG Logo，支持自定义颜色、大小和发光效果
 interface Props {
   color?: string
   size?: number

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 通知弹出面板
+ * 展示未读回复、@提及、点赞、系统消息和私信等通知分类
+ */
+
 import { useI18n } from 'vue-i18n'
 
 import { settings } from '~/logic'
@@ -46,8 +51,9 @@ onMounted(() => {
   getUnreadMessageCount()
 })
 
+/** 获取各通知类型的未读计数并更新列表 */
 function getUnreadMessageCount() {
-  api.notification.getUnreadMsg().then((res) => {
+  api.notification.getUnreadMessageCount().then((res) => {
     if (res.code === 0) {
       const resData = res.data
 
@@ -73,6 +79,7 @@ function getUnreadMessageCount() {
   })
 }
 
+/** 处理通知项点击，若开启 Drawer 模式则触发 itemClick 事件 */
 function handleClick(event: MouseEvent, item: { name: string, url: string, unreadCount: number, icon: string }) {
   if (settings.value.openNotificationsPageAsDrawer) {
     emit('itemClick', item)

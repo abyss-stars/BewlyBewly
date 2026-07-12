@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 外观设置页面
+ * 管理主题颜色、壁纸、自定义 CSS 等外观相关设置
+ */
+
 import { useThrottleFn } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 
@@ -55,13 +60,15 @@ watch(() => settings.value.wallpaper, (newValue) => {
   changeWallpaper(newValue)
 })
 
+/** 更改主题颜色 */
 function changeThemeColor(color: string) {
   settings.value.themeColor = color
 }
+/** 节流版本的主题颜色更改，防止颜色选择器频繁触发 */
 const changeThemeColorThrottle = useThrottleFn((color: string) => changeThemeColor(color), 100)
 
+/** 更换壁纸：设置壁纸后自动开启遮罩，防止文字难以辨认 */
 function changeWallpaper(url: string) {
-  // If you had already set the wallpaper, it enables the wallpaper masking to prevent text hard to see
   if (url)
     settings.value.enableWallpaperMasking = true
   else

@@ -1,3 +1,7 @@
+/**
+ * 视频相关 API 定义
+ * 包含推荐视频、不喜欢/撤销不喜欢、视频详情、评论、热门视频、视频流地址等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

@@ -1,3 +1,4 @@
+/** Bilibili APP 推荐 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface AppForYouResult {
@@ -7,12 +8,14 @@ export interface AppForYouResult {
   data: Data
 }
 
+/** APP 推荐数据 */
 export interface Data {
   items: Item[]
   config: Config
   interest_choose: null
 }
 
+/** 推荐配置 */
 export interface Config {
   column: number
   autoplay_card: number
@@ -38,6 +41,7 @@ export interface Config {
 export interface ToastClass {
 }
 
+/** 推荐卡片（多种 card_type） */
 export interface Item {
   card_type: CardType
   card_goto: CardGoto
@@ -74,6 +78,7 @@ export interface Item {
   bottom_rcmd_reason_style?: RcmdReasonStyle
 }
 
+/** 广告信息 */
 export interface AdInfo {
   creative_id: number
   creative_type: number
@@ -148,6 +153,7 @@ export interface Extra {
   use_ad_web_v2: boolean
 }
 
+/** 广告卡片 */
 export interface Card {
   ad_tag: string
   ad_tag_style: AdTagStyle
@@ -232,6 +238,7 @@ export interface Adver {
   adver_type: number
 }
 
+/** 封面 */
 export interface Cover {
   gif_tag_show: boolean
   gif_url: string
@@ -241,6 +248,7 @@ export interface Cover {
   url: string
 }
 
+/** 反馈面板 */
 export interface FeedbackPanel {
   close_rec_tips: string
   feedback_panel_detail: FeedbackPanelDetail[]
@@ -264,6 +272,7 @@ export interface SecondaryPanel {
   text: string
 }
 
+/** 清晰度标签 */
 export interface QualityInfo {
   bg_color: string
   bg_color_night: string
@@ -307,6 +316,7 @@ export enum AvatarEventV2 {
   UpClick = 'up-click',
 }
 
+/** Banner 位 */
 export interface BannerItem {
   id: number
   title: string
@@ -323,6 +333,7 @@ export interface BannerItem {
   cm_mark: number
 }
 
+/** 推荐理由样式 */
 export interface RcmdReasonStyle {
   text: string
   text_color: string
@@ -373,6 +384,7 @@ export enum Text {
   关注 = '+ 关注',
 }
 
+/** 播放器参数 */
 export interface PlayerArgs {
   aid: number
   cid: number
@@ -380,6 +392,7 @@ export interface PlayerArgs {
   duration: number
 }
 
+/** 三点菜单（不感兴趣、举报等） */
 export interface ThreePoint {
   dislike_reasons: DislikeReason[]
   feedbacks?: DislikeReason[]

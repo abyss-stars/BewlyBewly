@@ -1,3 +1,7 @@
+/**
+ * 排行榜 API 定义
+ * 包含视频排行榜和番剧排行榜等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

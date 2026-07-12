@@ -1,15 +1,27 @@
+/**
+ * 内容筛选 Composable
+ * 根据用户设置的规则筛选视频列表，支持多种筛选条件：
+ * - 竖屏视频过滤
+ * - 播放量筛选
+ * - 视频时长筛选
+ * - 标题关键词/正则筛选
+ * - 用户名称筛选
+ * - 已关注用户豁免
+ */
 import { settings } from '~/logic'
 import { isVerticalVideo } from '~/utils/uriParse'
 
+/** 根据路径数组从对象中深层取值 */
 const get = (obj: any, path: string[]) => path.reduce((acc, part) => acc && acc[part], obj)
 
+/** 筛选类型枚举 */
 export enum FilterType {
-  filterOutVerticalVideos,
-  viewCount,
-  viewCountStr,
-  duration,
-  title,
-  user,
+  filterOutVerticalVideos, // 过滤竖屏视频
+  viewCount, // 按播放量筛选
+  viewCountStr, // 按播放量（含中文单位如"万"）筛选
+  duration, // 按时长筛选
+  title, // 按标题筛选
+  user, // 按用户筛选
 }
 
 type FuncMap = { [key in FilterType]: {
@@ -20,6 +32,13 @@ type FuncMap = { [key in FilterType]: {
 
 type KeyPath = Array<string>[]
 
+/**
+ * 创建视频筛选函数
+ * @param isFollowedKeyPath - 判断是否已关注的数据路径
+ * @param filterOpt - 要启用的筛选类型列表
+ * @param keyList - 各筛选类型对应的数据路径列表
+ * @returns 筛选函数 ref，为 null 时表示无需筛选
+ */
 export function useFilter(isFollowedKeyPath: string[], filterOpt: FilterType[], keyList: KeyPath) {
   function filterOutVerticalVideos(item: any, keyPath: string[], _filterValue: number) {
     const value = get(item, keyPath)
@@ -205,6 +224,7 @@ export function useFilter(isFollowedKeyPath: string[], filterOpt: FilterType[], 
     }
   }
 
+  /** 判断内容是否因已关注而豁免筛选 */
   function isAllowedContent(item: any): boolean {
     if (settings.value.recommendationMode === 'web') {
       const isFollowed = get(item, isFollowedKeyPath)

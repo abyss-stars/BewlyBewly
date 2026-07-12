@@ -1,3 +1,7 @@
+/**
+ * 通知相关 API 定义
+ * 包含未读消息和未读私信的数量查询
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

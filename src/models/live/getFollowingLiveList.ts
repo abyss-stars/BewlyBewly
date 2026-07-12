@@ -1,3 +1,4 @@
+/** Bilibili 关注直播列表 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface FollowingLiveResult {
@@ -7,6 +8,7 @@ export interface FollowingLiveResult {
   data: Data
 }
 
+/** 关注直播分页数据 */
 export interface Data {
   title: string
   pageSize: number
@@ -18,6 +20,7 @@ export interface Data {
   never_lived_faces: any[]
 }
 
+/** 单个直播间信息 */
 export interface List {
   roomid: number
   uid: number

@@ -4,6 +4,10 @@ import type PkgType from '../package.json'
 import fs from 'fs-extra'
 import { isDev, isFirefox, isSafari, port, r } from '../scripts/utils'
 
+/**
+ * 生成浏览器扩展的 manifest.json 配置
+ * 根据运行环境（开发/生产、Chrome/Firefox/Safari）动态调整配置项
+ */
 export async function getManifest() {
   const pkg = await fs.readJSON(r('package.json')) as typeof PkgType
 

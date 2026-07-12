@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * "更多"弹出面板（移动端适配）
+ * 在小屏幕上显示通知、动态、收藏、历史等常用功能入口
+ */
+
 import { useI18n } from 'vue-i18n'
 
 import { getUserID } from '~/utils/main'

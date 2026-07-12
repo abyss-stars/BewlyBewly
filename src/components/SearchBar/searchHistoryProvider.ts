@@ -1,3 +1,4 @@
+// 搜索历史管理模块，通过 Bilibili 的跨域 iframe 消息通信存储搜索历史
 import { LazyValue } from '~/utils/lazyLoad'
 
 const SEARCH_HISTORY_LIMIT = 20
@@ -24,6 +25,7 @@ export interface SuggestionResponse {
   stoken: string
 }
 
+// 按时间戳降序排列搜索历史
 function historySort(historyItems: HistoryItem[]) {
   historyItems.sort((a, b) => b.timestamp - a.timestamp)
   return historyItems
@@ -36,6 +38,7 @@ export interface BilibiliStorageEvent {
   value: string
 }
 
+// Bilibili 存储提供者，通过 Bilibili 的 cols iframe 进行跨域存储操作
 class BilibiliStorageProvider {
   static BILIBILI_HISTORY_KEY = 'search_history:search_history'
 
@@ -82,6 +85,7 @@ class BilibiliStorageProvider {
 
 const provider = new BilibiliStorageProvider()
 
+// 获取搜索历史
 export async function getSearchHistory(): Promise<HistoryItem[]> {
   const e = await provider.getSearchHistory()
 
@@ -97,6 +101,7 @@ export async function getSearchHistory(): Promise<HistoryItem[]> {
   }
 }
 
+// 添加搜索历史，已存在的项更新时间戳，超出上限的项会被丢弃
 export async function addSearchHistory(historyItem: HistoryItem) {
   let history = await getSearchHistory()
 
@@ -122,6 +127,7 @@ export async function addSearchHistory(historyItem: HistoryItem) {
   return history
 }
 
+// 删除指定搜索历史项
 export async function removeSearchHistory(value: string) {
   let history = await getSearchHistory()
   history = history.filter(item => item.value !== value)
@@ -129,6 +135,7 @@ export async function removeSearchHistory(value: string) {
   return history
 }
 
+// 清空所有搜索历史
 export async function clearAllSearchHistory() {
   return provider.clearSearchHistory()
 }

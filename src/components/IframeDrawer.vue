@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Iframe 抽屉组件，在当前页以抽屉动画形式打开 Bilibili 页面 iframe
 import { onKeyStroke, useEventListener } from '@vueuse/core'
 
 import { DRAWER_VIDEO_ENTER_PAGE_FULL, DRAWER_VIDEO_EXIT_PAGE_FULL } from '~/constants/globalEvents'
@@ -58,6 +59,7 @@ onUnmounted(() => {
   history.replaceState(null, '', 'https://www.bilibili.com')
 })
 
+// 同步 iframe 内部 URL 到浏览器地址栏
 function updateCurrentUrl() {
   if (iframeRef.value?.contentWindow) {
     try {
@@ -70,6 +72,7 @@ function updateCurrentUrl() {
   }
 }
 
+// 监听浏览器前进/后退，同步更新 iframe 内容
 async function updateIframeUrl() {
   if (isHomePage()) {
     await handleClose()
@@ -82,6 +85,7 @@ async function updateIframeUrl() {
   }
 }
 
+// 关闭抽屉，先释放 iframe 资源，延迟后触发 close 事件（等待动画）
 async function handleClose() {
   if (delayCloseTimer.value) {
     clearTimeout(delayCloseTimer.value)
@@ -94,6 +98,7 @@ async function handleClose() {
   }, 300)
 }
 
+// 释放 iframe 资源：先设置 about:blank 释放内存，再从 DOM 移除
 async function releaseIframeResources() {
   // Clear iframe content
   currentUrl.value = 'about:blank'
@@ -115,6 +120,7 @@ async function releaseIframeResources() {
   iframeRef.value = null
 }
 
+// 在新标签页中打开当前 iframe 的页面
 function handleOpenInNewTab() {
   if (iframeRef.value) {
     window.open(iframeRef.value.contentWindow?.location.href.replace(/\/$/, ''), '_blank')

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 下拉选择器组件，支持点击展开选项列表、点击外部关闭
 const props = defineProps<{
   options: OptionType[]
   modelValue: any
@@ -25,6 +26,7 @@ onMounted(() => {
     label.value = `${props.options.find((item: OptionType) => item.value === props.modelValue)?.label}`
 })
 
+// 点击选项后的处理：更新标签文本，发送事件，关闭下拉列表
 function onClickOption(val: OptionType) {
   window.removeEventListener('click', () => {})
   label.value = val.label
@@ -38,10 +40,12 @@ function closeOptions() {
 }
 
 /** when you click on it outside, the selection option will be turned off  */
+// 鼠标离开时注册全局点击监听，点击外部可关闭下拉列表
 function onMouseLeave() {
   window.addEventListener('click', closeOptions)
 }
 
+// 鼠标进入时移除全局点击监听，防止在选项区域误关闭
 function onMouseEnter() {
   window.removeEventListener('click', closeOptions)
 }

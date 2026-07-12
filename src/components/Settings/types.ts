@@ -1,3 +1,9 @@
+/**
+ * 设置页面类型定义
+ * 定义设置菜单项和 Bewly 页面的枚举与接口
+ */
+
+/** 设置菜单类型 */
 export enum MenuType {
   General = 'General',
   DesktopAndDock = 'DesktopAndDock',

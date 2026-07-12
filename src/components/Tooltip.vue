@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 通用工具提示组件
+ * 支持上下左右等多个方向，hover 时显示提示文本
+ */
+
 defineProps<{
   content: string
   placement: 'left' | 'right' | 'top' | 'bottom' | 'bottom-left' | 'bottom-right'

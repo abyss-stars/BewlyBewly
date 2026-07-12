@@ -1,3 +1,4 @@
+/** Bilibili 视频信息 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface VideoInfo {
@@ -7,6 +8,7 @@ export interface VideoInfo {
   data: Data
 }
 
+/** 视频详情数据 */
 export interface Data {
   bvid: string
   aid: number
@@ -50,12 +52,14 @@ export interface Data {
   disable_show_up_info: boolean
 }
 
+/** 争议/申诉信息 */
 export interface ArgueInfo {
   argue_msg: string
   argue_type: number
   argue_link: string
 }
 
+/** 新版视频简介 */
 export interface DescV2 {
   raw_text: string
   type: number
@@ -68,6 +72,7 @@ export interface Dimension {
   rotate: number
 }
 
+/** 荣誉回复 */
 export interface HonorReply {
   honor: Honor[]
 }
@@ -79,12 +84,14 @@ export interface Honor {
   weekly_recommend_num: number
 }
 
+/** UP 主信息 */
 export interface Owner {
   mid: number
   name: string
   face: string
 }
 
+/** 分P 信息 */
 export interface Page {
   cid: number
   page: number
@@ -96,6 +103,7 @@ export interface Page {
   dimension: Dimension
 }
 
+/** 联合投稿/Staff 信息 */
 export interface Staff {
   mid: number
   title: string
@@ -107,6 +115,7 @@ export interface Staff {
   label_style: number
 }
 
+/** 官方认证信息 */
 export interface Official {
   role: number
   title: string
@@ -114,6 +123,7 @@ export interface Official {
   type: number
 }
 
+/** 大会员信息 */
 export interface Vip {
   type: number
   status: number
@@ -145,6 +155,7 @@ export interface Label {
   img_label_uri_hant_static: string
 }
 
+/** 视频统计信息 */
 export interface Stat {
   aid: number
   view: number
@@ -161,6 +172,7 @@ export interface Stat {
   vt: number
 }
 
+/** 字幕信息 */
 export interface Subtitle {
   allow_submit: boolean
   list: List[]
@@ -179,6 +191,7 @@ export interface List {
   author: Author
 }
 
+/** 字幕作者 */
 export interface Author {
   mid: number
   name: string
@@ -193,6 +206,7 @@ export interface Author {
   is_senior_member: number
 }
 
+/** 用户装扮 */
 export interface UserGarb {
   url_image_ani_cut: string
 }

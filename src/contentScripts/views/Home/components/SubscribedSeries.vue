@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 订阅系列组件。
+ * 展示用户订阅的 PGC（番剧/影视）更新动态，支持无限滚动加载。
+ */
 import type { GridLayoutType } from '~/logic'
 import type { DataItem as MomentItem, MomentResult } from '~/models/moment/moment'
 import { useBewlyApp } from '~/composables/useAppProvider'

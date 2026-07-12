@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 滑块组件
+ * 支持最小/最大值范围，实时更新滑动进度条样式和模型值
+ */
+
 import type { Ref } from 'vue'
 
 interface Props {

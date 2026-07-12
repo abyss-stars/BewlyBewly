@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 侧边栏组件
+ * 固定在页面侧边，包含主题模式切换和设置按钮，支持自动隐藏
+ */
+
 import type { HoveringDockItem } from './types'
 
 import { Icon } from '@iconify/vue'
@@ -40,6 +45,7 @@ watch(() => settings.value.autoHideSidebar, (newValue) => {
   immediate: true,
 })
 
+/** 切换侧边栏隐藏状态，仅在开启自动隐藏时生效 */
 function toggleHideSidebar(hide: boolean) {
   if (settings.value.autoHideSidebar)
     hideSidebar.value = hide

@@ -1,3 +1,5 @@
+/** Bilibili 收藏 API 返回模型 */
+
 export interface FavoritesResult {
   code: number
   message: string
@@ -5,6 +7,7 @@ export interface FavoritesResult {
   data: Data
 }
 
+/** 收藏夹数据 */
 export interface Data {
   info: Info
   medias: Media[]
@@ -12,6 +15,7 @@ export interface Data {
   ttl: number
 }
 
+/** 收藏夹基本信息 */
 export interface Info {
   id: number
   fid: number
@@ -32,6 +36,7 @@ export interface Info {
   media_count: number
 }
 
+/** 收藏夹计数 */
 export interface InfoCntInfo {
   collect: number
   play: number
@@ -39,6 +44,7 @@ export interface InfoCntInfo {
   share: number
 }
 
+/** 收藏夹创建者 */
 export interface InfoUpper {
   mid: number
   name: string
@@ -48,6 +54,7 @@ export interface InfoUpper {
   vip_statue: number
 }
 
+/** 收藏的媒体条目 */
 export interface Media {
   id: number
   type: number
@@ -70,6 +77,7 @@ export interface Media {
   ugc: Ugc
 }
 
+/** 媒体计数 */
 export interface MediaCntInfo {
   collect: number
   play: number
@@ -84,6 +92,7 @@ export interface Ugc {
   first_cid: number
 }
 
+/** 媒体 UP 主 */
 export interface MediaUpper {
   mid: number
   name: string

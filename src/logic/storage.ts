@@ -1,11 +1,19 @@
+/**
+ * 存储与设置定义
+ * 定义扩展的所有设置项接口和默认值，并创建对应的持久化存储。
+ * 所有设置通过 useStorageLocal 封装，数据保存在浏览器本地存储中。
+ */
 import type { wallpaperItem } from '~/constants/imgs'
 import type { HomeSubPage } from '~/contentScripts/views/Home/types'
 import type { AppPage } from '~/enums/appEnums'
 import { useStorageLocal } from '~/composables/useStorageLocal'
 
+/** 示例存储 */
 export const storageDemo = useStorageLocal<string>('webext-demo', 'Storage Demo')
+/** Bilibili 登录 access key */
 export const accessKey = useStorageLocal<string>('accessKey', '')
 
+/** 扩展设置接口，涵盖外观、布局、过滤、搜索等所有可配置项 */
 export interface Settings {
   touchScreenOptimization: boolean
   enableGridLayoutSwitcher: boolean
@@ -111,6 +119,7 @@ export interface Settings {
   useOriginalBilibiliHomepage: boolean
 }
 
+/** 设置项的默认值 */
 export const originalSettings: Settings = {
   touchScreenOptimization: false,
   enableGridLayoutSwitcher: true,
@@ -215,18 +224,23 @@ export const originalSettings: Settings = {
   useOriginalBilibiliHomepage: false,
 }
 
+/** 主设置存储，合并默认值以确保新增设置项有默认值 */
 export const settings = useStorageLocal<Settings>('settings', ref<Settings>(originalSettings), { mergeDefaults: true })
 
+/** 网格布局类型 */
 export type GridLayoutType = 'adaptive' | 'twoColumns' | 'oneColumn'
 
+/** 网格布局配置 */
 export interface GridLayout {
   home: GridLayoutType
 }
 
+/** 网格布局偏好存储 */
 export const gridLayout = useStorageLocal<GridLayout>('gridLayout', ref<GridLayout>({
   home: 'adaptive',
 }), { mergeDefaults: true })
 
+/** 侧边栏展开/收起状态存储 */
 export const sidePanel = useStorageLocal<{ home: boolean }>('sidePanel', ref<{
   home: boolean
 }>({

@@ -1,3 +1,7 @@
+/**
+ * 历史记录 API 定义
+ * 包含获取/搜索/删除历史记录、清空全部、暂停/恢复记录等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

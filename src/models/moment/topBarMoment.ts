@@ -1,3 +1,4 @@
+/** Bilibili 顶栏动态模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface TopBarMomentResult {
@@ -7,6 +8,7 @@ export interface TopBarMomentResult {
   data: Data
 }
 
+/** 顶栏动态数据 */
 export interface Data {
   has_more: boolean
   items: Item[]
@@ -15,6 +17,7 @@ export interface Data {
   update_num: number
 }
 
+/** 单条顶栏动态 */
 export interface Item {
   author: Author
   cover: string
@@ -27,6 +30,7 @@ export interface Item {
   visible: boolean
 }
 
+/** 动态作者 */
 export interface Author {
   face: string
   jump_url: string
@@ -36,6 +40,7 @@ export interface Author {
   vip: Vip
 }
 
+/** 官方认证 */
 export interface Official {
   desc: string
   role: number
@@ -43,6 +48,7 @@ export interface Official {
   type: number
 }
 
+/** 大会员信息 */
 export interface Vip {
   avatar_icon: AvatarIcon
   avatar_subscript: number

@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 选项页组件
+ * 提供扩展的设置界面，允许用户修改扩展配置
+ */
 import { storageDemo } from '~/logic/storage'
 </script>
 

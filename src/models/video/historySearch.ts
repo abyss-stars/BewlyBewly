@@ -1,3 +1,5 @@
+/** Bilibili 历史搜索 API 返回模型 */
+
 export interface HistorySearchResult {
   code: number
   message: string
@@ -5,12 +7,14 @@ export interface HistorySearchResult {
   data: Data
 }
 
+/** 历史搜索数据 */
 export interface Data {
   has_more: boolean
   page: Page
   list: List[]
 }
 
+/** 单条搜索历史 */
 export interface List {
   title: string
   long_title: string
@@ -63,6 +67,7 @@ export enum ShowTitle {
   The4K = '4K',
 }
 
+/** 分页信息 */
 export interface Page {
   pn: number
   total: number

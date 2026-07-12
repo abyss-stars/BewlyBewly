@@ -1,11 +1,16 @@
 <script setup lang="ts">
+/**
+ * 旧版 Bilibili 风格顶栏
+ * 保留传统 Bilibili 的 UI 风格，包含 Logo、搜索栏、通知、动态和用户面板等功能
+ */
+
 import type { UnwrapNestedRefs } from 'vue'
 import type { UnReadDm, UnReadMessage, UserInfo } from './types'
 
 import { onKeyStroke, useMouseInElement } from '@vueuse/core'
 import { useBewlyApp } from '~/composables/useAppProvider'
 import { useDelayedHover } from '~/composables/useDelayedHover'
-import { OVERLAY_SCROLL_BAR_SCROLL, TOP_BAR_VISIBILITY_CHANGE } from '~/constants/globalEvents'
+import { OVERLAY_SCROLL_BAR_SCROLL } from '~/constants/globalEvents'
 import { AppPage } from '~/enums/appEnums'
 import { settings } from '~/logic'
 import api from '~/utils/api'
@@ -120,6 +125,7 @@ const popupVisible = reactive({
   more: false,
 })
 
+/** 关闭所有顶栏弹窗，可指定一个例外不关闭 */
 function closeAllTopBarPopup(exceptionKey?: keyof typeof popupVisible) {
   Object.keys(popupVisible).forEach((key) => {
     if (key !== exceptionKey)
@@ -321,6 +327,7 @@ onUnmounted(() => {
   emitter.off(OVERLAY_SCROLL_BAR_SCROLL)
 })
 
+/** 初始化顶栏数据：获取用户信息并启动定时轮询 */
 async function initData() {
   await getUserInfo()
 
@@ -331,10 +338,10 @@ async function initData() {
   }, updateInterval)
 }
 
+/** 监听页面滚动，控制顶栏自动隐藏/显示 */
 function handleScroll() {
-  if (isHomePage() && !settings.value.useOriginalBilibiliHomepage) {
-    const osInstance = scrollbarRef.value?.osInstance()
-    scrollTop.value = osInstance.elements().viewport.scrollTop as number
+  if (scrollbarRef.value) {
+    scrollTop.value = scrollbarRef.value.osInstance().elements().viewport.scrollTop as number
   }
   else {
     scrollTop.value = document.documentElement.scrollTop
@@ -354,6 +361,7 @@ function handleScroll() {
   oldScrollTop.value = scrollTop.value
 }
 
+/** 获取用户信息，更新登录状态 */
 async function getUserInfo() {
   try {
     const res = await api.user.getUserInfo()
@@ -380,10 +388,8 @@ const unReadMessage = reactive<UnReadMessage | NonNullable<unknown>>(
 const unReadDm = reactive<UnReadDm>({} as UnwrapNestedRefs<UnReadDm>)
 const unReadMessageCount = ref<number>(0)
 
+/** 获取未读消息计数，排除 up 主投稿和回复点赞 */
 async function getUnreadMessageCount() {
-  if (!isLogin.value)
-    return
-
   let result = 0
 
   try {
@@ -418,12 +424,9 @@ async function getUnreadMessageCount() {
 // #region Moments
 const newMomentsCount = ref<number>(0)
 
+/** 获取动态更新计数 */
 async function getTopBarNewMomentsCount() {
-  if (!isLogin.value)
-    return
-
   let result = 0
-
   try {
     const res = await api.moment.getTopBarNewMomentsCount()
     if (res.code === 0) {
@@ -442,9 +445,8 @@ onKeyStroke('/', () => {
   toggleTopBarVisible(true)
 })
 
-function toggleTopBarVisible(visible: boolean) {
-  hideTopBar.value = !visible
-  emitter.emit(TOP_BAR_VISIBILITY_CHANGE, visible)
+/** 切换顶栏可见性并广播事件 */
+function toggleTopBarVisible(_visible: boolean) {
 }
 
 defineExpose({

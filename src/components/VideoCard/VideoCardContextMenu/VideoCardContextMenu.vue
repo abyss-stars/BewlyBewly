@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 视频卡右键菜单/更多按钮弹出菜单，提供打开方式、复制链接、查看封面等操作
 import type { CSSProperties } from 'vue'
 import type { Video } from '../types'
 
@@ -33,6 +34,7 @@ const showDislikeDialog = ref<boolean>(false)
 const showPipWindow = ref<boolean>(false)
 const { openIframeDrawer } = useBewlyApp()
 
+// 通用操作选项枚举
 enum VideoOption {
   OpenInNewTab,
   OpenInBackground,
@@ -48,6 +50,7 @@ enum VideoOption {
   CopyAVNumber,
 }
 
+// 构建通用操作菜单项，番剧/直播类型会过滤掉复制 BV/AV 号和查看作者频道
 const commonOptions = computed((): { command: VideoOption, name: string, icon: string, color?: string }[][] => {
   let result = [
     [
@@ -82,10 +85,12 @@ onMounted(() => {
   showContextMenu.value = true
 })
 
+// 处理推荐视频的"不感兴趣"等操作
 function handleMoreCommand(_command: number) {
   handleRemoved()
 }
 
+// 处理 App 推荐视频的三点菜单命令（不感兴趣等）
 function handleAppMoreCommand(command: ThreePointV2Type) {
   switch (command) {
     case ThreePointV2Type.Feedback:
@@ -96,6 +101,7 @@ function handleAppMoreCommand(command: ThreePointV2Type) {
   }
 }
 
+// 处理通用菜单命令：新标签/后台/当前页/新窗口/抽屉打开，复制链接/BV/AV号，查看封面
 function handleCommonCommand(command: VideoOption) {
   switch (command) {
     case VideoOption.OpenInNewTab:
@@ -138,11 +144,13 @@ function handleCommonCommand(command: VideoOption) {
   }
 }
 
+// 打开 App 推荐的不感兴趣对话框
 function openAppDislikeDialog() {
   showDislikeDialog.value = true
   showContextMenu.value = false
 }
 
+// 关闭菜单，同时关闭画中画窗口
 function handleClose() {
   showContextMenu.value = false
   showPipWindow.value = false
@@ -157,6 +165,7 @@ function handleReopen() {
   handleClose()
 }
 
+// 处理视频被标记为不感兴趣后的回调
 function handleRemoved(selectedOpt?: { dislikeReasonId: number }) {
   emit('removed', selectedOpt)
   handleClose()

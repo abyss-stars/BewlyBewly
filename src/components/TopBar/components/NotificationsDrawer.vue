@@ -1,10 +1,13 @@
 <script setup lang="ts">
+/**
+ * 通知抽屉组件
+ * 以 iframe 侧边抽屉形式展示通知页面，支持 Esc 关闭和在新标签页打开
+ */
+
 import { onKeyStroke } from '@vueuse/core'
 
 import { useBewlyApp } from '~/composables/useAppProvider'
 import { settings } from '~/logic'
-
-// TODO: support shortcuts like `Ctrl+Alt+T` to open in new tab, `Esc` to close
 
 const props = defineProps<{
   url: string
@@ -31,6 +34,7 @@ onActivated(() => {
 })
 
 const beforeUrl = ref<string>('')
+/** 打开抽屉 */
 function handleOpen() {
   show.value = true
   if (beforeUrl.value !== props.url) {
@@ -46,6 +50,7 @@ onBeforeUnmount(() => {
   releaseIframeResources()
 })
 
+/** 关闭抽屉，延迟触发 close 事件 */
 async function handleClose() {
   if (delayCloseTimer.value) {
     clearTimeout(delayCloseTimer.value)
@@ -57,6 +62,7 @@ async function handleClose() {
   }, 300)
 }
 
+/** 释放 iframe 资源：清空 src 并移除以避免跨域问题和内存泄漏 */
 async function releaseIframeResources() {
   // Clear iframe content
   currentUrl.value = 'about:blank'
@@ -78,6 +84,7 @@ async function releaseIframeResources() {
   iframeRef.value = null
 }
 
+/** 在新标签页中打开当前 iframe 的页面 */
 function handleOpenInNewTab() {
   if (iframeRef.value) {
     try {

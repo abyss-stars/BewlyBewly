@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 搜索页设置
+ * 管理搜索页的 Logo 样式、搜索栏行为和壁纸设置
+ */
+
 import { SEARCH_BAR_CHARACTERS } from '~/constants/imgs'
 import { settings } from '~/logic'
 
@@ -13,6 +18,7 @@ watch(() => settings.value.individuallySetSearchPageWallpaper, (newValue) => {
     document.documentElement.style.backgroundImage = `url(${settings.value.wallpaper})`
 })
 
+/** 更换搜索栏聚焦时的角色图片 */
 function changeSearchBarFocusCharacter(url: string) {
   settings.value.searchPageSearchBarFocusCharacter = url
 }

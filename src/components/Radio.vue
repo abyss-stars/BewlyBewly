@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 单选开关组件，支持 v-model 双向绑定
 defineProps<{
   modelValue: boolean
   label?: string

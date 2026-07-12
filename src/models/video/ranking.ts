@@ -1,3 +1,4 @@
+/** Bilibili 排行榜 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface RankingResult {
@@ -7,11 +8,13 @@ export interface RankingResult {
   data: Data
 }
 
+/** 排行榜数据 */
 export interface Data {
   note: string
   list: List[]
 }
 
+/** 排行榜视频条目 */
 export interface List {
   aid: number
   videos: number
@@ -46,16 +49,19 @@ export interface List {
   charging_pay?: ChargingPay
 }
 
+/** 付费充电信息 */
 export interface ChargingPay {
   level: number
 }
 
+/** 视频尺寸 */
 export interface Dimension {
   width: number
   height: number
   rotate: number
 }
 
+/** UP 主信息 */
 export interface Owner {
   mid: number
   name: string

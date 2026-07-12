@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 首页设置页面
+ * 管理推荐模式（Web/App）、授权、推荐内容筛选、首页标签页排序与可见性等设置
+ */
+
 import QRCodeVue from 'qrcode.vue'
 import { useToast } from 'vue-toastification'
 import draggable from 'vuedraggable'
@@ -31,12 +36,14 @@ onBeforeUnmount(() => {
   clearInterval(pollLoginQRCodeInterval.value)
 })
 
+/** 切换为 App 推荐模式，若未授权则触发授权流程 */
 function changeAppRecommendationMode() {
   settings.value.recommendationMode = 'app'
   if (!accessKey.value)
     handleAuthorize()
 }
 
+/** 开始授权：显示二维码弹窗并开始轮询扫码状态 */
 async function handleAuthorize() {
   showQRCodeDialog.value = true
   try {
@@ -48,10 +55,12 @@ async function handleAuthorize() {
   }
 }
 
+/** 撤销授权 */
 function handleRevoke() {
   revokeAccessKey()
 }
 
+/** 获取电视端登录二维码 */
 async function setLoginQRCode() {
   const res = await getTVLoginQRCode()
   if (res.code === 0) {
@@ -60,6 +69,7 @@ async function setLoginQRCode() {
   }
 }
 
+/** 轮询电视端扫码登录结果，每3秒查询一次 */
 function pollLoginQRCode() {
   clearInterval(pollLoginQRCodeInterval.value)
 
@@ -90,11 +100,13 @@ function pollLoginQRCode() {
   }, 3000)
 }
 
+/** 关闭二维码弹窗并停止轮询 */
 function handleCloseQRCodeDialog() {
   clearInterval(pollLoginQRCodeInterval.value)
   showQRCodeDialog.value = false
 }
 
+/** 导出筛选规则为 JSON 文件 */
 function handleExport(filterType: 'title' | 'user') {
   const filters = filterType === 'title' ? settings.value.filterByTitle : settings.value.filterByUser
   const jsonString = JSON.stringify(filters, null, 2) // Pretty print JSON
@@ -107,6 +119,7 @@ function handleExport(filterType: 'title' | 'user') {
   URL.revokeObjectURL(url)
 }
 
+/** 从 JSON 文件导入筛选规则 */
 function handleImport(filterType: 'title' | 'user') {
   const input = document.createElement('input')
   input.type = 'file'
@@ -143,23 +156,27 @@ function handleImport(filterType: 'title' | 'user') {
   input.click()
 }
 
-// Update the existing functions to use the new generic ones
+/** 导出标题筛选规则 */
 function handleExportFilterByTitle() {
   handleExport('title')
 }
 
+/** 导入标题筛选规则 */
 function handleImportFilterByTitle() {
   handleImport('title')
 }
 
+/** 导出用户筛选规则 */
 function handleExportFilterByUser() {
   handleExport('user')
 }
 
+/** 导入用户筛选规则 */
 function handleImportFilterByUser() {
   handleImport('user')
 }
 
+/** 重置首页标签页为默认可见状态 */
 function resetHomeTabs() {
   settings.value.homePageTabVisibilityList = mainStore.homeTabs.map((tab) => {
     return {
@@ -169,6 +186,7 @@ function resetHomeTabs() {
   })
 }
 
+/** 切换首页标签页的可见性，至少保留一个标签可见 */
 function handleToggleHomeTab(tab: any) {
   // Prevent disabling all tabs if there is only one
   if (settings.value.homePageTabVisibilityList.filter(tab => tab.visible === true).length > 1)

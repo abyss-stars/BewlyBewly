@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 进度条组件，根据百分比显示进度，支持自定义颜色和高度
 interface Props {
   percentage: number
   color?: string

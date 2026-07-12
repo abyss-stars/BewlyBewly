@@ -1,9 +1,14 @@
+/**
+ * 顶栏 Store
+ * 管理顶部导航栏的各项按钮配置以及弹出面板的显示/隐藏状态
+ */
 import type { AppPage } from '~/enums/appEnums'
 
 import { defineStore } from 'pinia'
 import { TopBarPopup } from '~/enums/appEnums'
 import { getUserID } from '~/utils/main'
 
+/** 顶栏按钮项 */
 export interface TopBarItem {
   i18nKey: string
   icon: string
@@ -13,6 +18,7 @@ export interface TopBarItem {
   page?: AppPage
 }
 
+/** 各弹出面板的可见性状态 */
 export interface PopupVisible {
   notifications: boolean
   moments: boolean
@@ -21,6 +27,7 @@ export interface PopupVisible {
 }
 
 export const useTopBarStore = defineStore('topBar', () => {
+  /** 各弹出面板的可见性（响应式） */
   const popupVisible = reactive({
     notifications: false,
     moments: false,
@@ -28,6 +35,7 @@ export const useTopBarStore = defineStore('topBar', () => {
     history: false,
   })
 
+  /** 顶栏按钮列表 */
   const topBarItems = computed((): TopBarItem[] => {
     return [
       {
@@ -66,6 +74,7 @@ export const useTopBarStore = defineStore('topBar', () => {
     ]
   })
 
+  /** 切换指定弹出面板的显示/隐藏状态 */
   function setPopupVisible(popup: TopBarPopup) {
     switch (popup) {
       case TopBarPopup.NotificationsPop:

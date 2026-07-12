@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 关注列表组件。
+ * 展示已关注 UP 主的视频动态和直播状态，支持无限滚动加载。
+ * 对 UP 主联合投稿有特殊处理，会将多个作者合并到同一条视频信息中。
+ */
 import type { Author } from '~/components/VideoCard/types'
 import type { GridLayoutType } from '~/logic'
 import type { List as FollowingLiveItem, FollowingLiveResult } from '~/models/live/getFollowingLiveList'
@@ -7,7 +12,6 @@ import { useBewlyApp } from '~/composables/useAppProvider'
 import { settings } from '~/logic'
 import api from '~/utils/api'
 
-// https://github.com/starknt/BewlyBewly/blob/fad999c2e482095dc3840bb291af53d15ff44130/src/contentScripts/views/Home/components/ForYou.vue#L16
 interface VideoElement {
   uniqueId: string // 用于标识一条视频（无法用来区分UP主联合投稿）
   bvid?: string // 用于标识UP主联合投稿视频
@@ -59,6 +63,7 @@ onActivated(() => {
   initPageAction()
 })
 
+/** 初始化页面行为：触底加载更多和下拉刷新 */
 function initPageAction() {
   handleReachBottom.value = async () => {
     if (isLoading.value)
@@ -76,6 +81,7 @@ function initPageAction() {
   }
 }
 
+/** 初始化数据：重置所有状态并重新获取 */
 async function initData() {
   offset.value = ''
   updateBaseline.value = ''
@@ -103,6 +109,7 @@ async function getData() {
   }
 }
 
+/** 获取关注用户的直播列表，仅保留正在直播的直播间 */
 async function getLiveVideoList() {
   let lastLiveVideoListLength = liveVideoList.value.length
   try {
@@ -153,6 +160,11 @@ async function getLiveVideoList() {
   }
 }
 
+/**
+ * 获取关注用户的视频动态。
+ * 通过占位骨架卡实现即时反馈，数据返回后替换占位。
+ * 处理 UP 主联合投稿（相同 bvid 合并作者）和重复视频去重。
+ */
 async function getFollowedUsersVideos() {
   if (noMoreContent.value)
     return
@@ -163,7 +175,7 @@ async function getFollowedUsersVideos() {
   }
 
   try {
-    // 如果 videoList 不是空的，获取最后一个真实视频的 uniqueId 和 bvid
+    // 获取最后一个真实视频用于去重
     let lastVideo: VideoElement | null = videoList.value.length > 0 ? videoList.value.slice(-1)[0] : null
     const lastUniqueId = lastVideo ? lastVideo.uniqueId : ''
     let lastBvid = lastVideo ? lastVideo.bvid : ''

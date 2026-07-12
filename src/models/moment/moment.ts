@@ -1,3 +1,4 @@
+/** Bilibili 动态 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface MomentResult {
@@ -7,6 +8,7 @@ export interface MomentResult {
   data: Data
 }
 
+/** 动态列表数据 */
 export interface Data {
   has_more: boolean
   items: DataItem[]
@@ -15,6 +17,7 @@ export interface Data {
   update_num: number
 }
 
+/** 单条动态 */
 export interface DataItem {
   basic: Basic
   id_str: string
@@ -30,6 +33,7 @@ export interface Basic {
   rid_str: string
 }
 
+/** 点赞动画图标 */
 export interface LikeIcon {
   action_url: string
   end_url: string
@@ -37,6 +41,7 @@ export interface LikeIcon {
   start_url: string
 }
 
+/** 动态模块集合 */
 export interface Modules {
   module_author: ModuleAuthor
   module_dynamic: ModuleDynamic
@@ -45,6 +50,7 @@ export interface Modules {
   module_interaction?: ModuleInteraction
 }
 
+/** 作者模块 */
 export interface ModuleAuthor {
   avatar?: Avatar
   face: string
@@ -65,6 +71,7 @@ export interface ModuleAuthor {
   decorate?: Decorate
 }
 
+/** 头像（含多层合成信息） */
 export interface Avatar {
   container_size: ContainerSize
   fallback_layers: FallbackLayers
@@ -77,6 +84,7 @@ export interface ContainerSize {
   width: number
 }
 
+/** 降级图层 */
 export interface FallbackLayers {
   is_critical_group: boolean
   layers: FallbackLayersLayer[]
@@ -89,6 +97,7 @@ export interface FallbackLayersLayer {
   visible: boolean
 }
 
+/** 通用规格（位置、渲染、尺寸） */
 export interface GeneralSpec {
   pos_spec: PosSpec
   render_spec: RenderSpec
@@ -129,6 +138,7 @@ export interface GeneralConfig {
   web_css_style: WebCSSStyle
 }
 
+/** 头像 CSS 样式 */
 export interface WebCSSStyle {
   borderRadius: BorderRadius
   'background-color'?: BackgroundColor
@@ -204,6 +214,7 @@ export interface WebpSrc {
   src_type: number
 }
 
+/** 头像装饰 */
 export interface Decorate {
   card_url: string
   fan: Fan
@@ -225,11 +236,13 @@ export enum ModuleAuthorLabel {
   番剧 = '番剧',
 }
 
+/** 官方认证信息 */
 export interface OfficialVerify {
   desc: string
   type: number
 }
 
+/** 头像挂件 */
 export interface Pendant {
   expire: number
   image: string
@@ -255,6 +268,7 @@ export enum ModuleAuthorType {
   AuthorTypePgc = 'AUTHOR_TYPE_PGC',
 }
 
+/** 大会员信息 */
 export interface Vip {
   avatar_subscript: number
   avatar_subscript_url: string
@@ -303,6 +317,7 @@ export enum TextColorEnum {
   Ffffff = '#FFFFFF',
 }
 
+/** 动态内容模块 */
 export interface ModuleDynamic {
   additional: null
   desc: ModuleDynamicDesc | null
@@ -310,23 +325,27 @@ export interface ModuleDynamic {
   topic: Topic | null
 }
 
+/** 动态文本描述 */
 export interface ModuleDynamicDesc {
   rich_text_nodes: PurpleRichTextNode[]
   text: string
 }
 
+/** 富文本节点 */
 export interface PurpleRichTextNode {
   orig_text: string
   text: string
   type: string
 }
 
+/** 动态主体内容（视频或PGC） */
 export interface Major {
   archive?: Archive
   type: MajorType
   pgc?: Pgc
 }
 
+/** 视频稿件 */
 export interface Archive {
   aid: string
   badge: Badge
@@ -358,6 +377,7 @@ export interface Stat {
   play: string
 }
 
+/** PGC 内容 */
 export interface Pgc {
   badge: Badge
   cover: string
@@ -375,12 +395,14 @@ export enum MajorType {
   MajorTypePgc = 'MAJOR_TYPE_PGC',
 }
 
+/** 话题信息 */
 export interface Topic {
   id: number
   jump_url: string
   name: string
 }
 
+/** 互动模块 */
 export interface ModuleInteraction {
   items: ModuleInteractionItem[]
 }
@@ -403,6 +425,7 @@ export interface FluffyRichTextNode {
   emoji?: Emoji
 }
 
+/** 表情 */
 export interface Emoji {
   icon_url: string
   size: number
@@ -410,6 +433,7 @@ export interface Emoji {
   type: number
 }
 
+/** 更多操作模块 */
 export interface ModuleMore {
   three_point_items: ThreePointItem[]
 }
@@ -429,6 +453,7 @@ export enum ThreePointItemType {
   ThreePointReport = 'THREE_POINT_REPORT',
 }
 
+/** 统计模块 */
 export interface ModuleStat {
   comment: Comment
   forward: Comment

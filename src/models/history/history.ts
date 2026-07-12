@@ -1,3 +1,5 @@
+/** Bilibili 历史记录 API 返回模型 */
+
 export interface HistoryResult {
   code: number
   message: string
@@ -5,12 +7,14 @@ export interface HistoryResult {
   data: Data
 }
 
+/** 历史记录数据 */
 export interface Data {
   cursor: Cursor
   tab: Tab[]
   list: List[]
 }
 
+/** 分页游标 */
 export interface Cursor {
   max: number
   view_at: number
@@ -18,6 +22,7 @@ export interface Cursor {
   ps: number
 }
 
+/** 业务类型 */
 export enum Business {
   ARCHIVE = 'archive',
   PGC = 'pgc',
@@ -26,6 +31,7 @@ export enum Business {
   ARTICLE_LIST = 'article-list',
 }
 
+/** 单条历史记录 */
 export interface List {
   title: string
   long_title: string
@@ -52,6 +58,7 @@ export interface List {
   live_status: number
 }
 
+/** 历史记录详细信息（oid、bvid、cid 等） */
 export interface History {
   oid: number
   epid: number
@@ -63,6 +70,7 @@ export interface History {
   dt: number
 }
 
+/** Tab 分类标签 */
 export interface Tab {
   type: string
   name: string

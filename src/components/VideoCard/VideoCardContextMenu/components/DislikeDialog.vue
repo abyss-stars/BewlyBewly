@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 不感兴趣对话框，选择不感兴趣的原因并提交，支持键盘数字键和方向键快速选择
 import type { Video } from '~/components/VideoCard/types'
 import { Icon } from '@iconify/vue'
 import { onKeyStroke } from '@vueuse/core'
@@ -28,11 +29,13 @@ const { t } = useI18n()
 const loadingDislikeDialog = ref<boolean>(false)
 const selectedDislikeReason = ref<number>(1)
 
+// 关闭不感兴趣对话框
 function closeDislikeDialog() {
   showDislikeDialog.value = false
   emit('close')
 }
 
+// 提交不感兴趣反馈给 Bilibili 推荐系统
 function handleAppDislike() {
   if (!accessKey.value) {
     toast.warning(t('auth.auth_access_key_first'))

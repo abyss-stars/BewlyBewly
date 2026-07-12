@@ -1,3 +1,5 @@
+/** Bilibili 稍后再看 API 返回模型 */
+
 export interface WatchLaterResult {
   code: number
   message: string
@@ -5,11 +7,13 @@ export interface WatchLaterResult {
   data: Data
 }
 
+/** 稍后再看数据 */
 export interface Data {
   count: number
   list: List[]
 }
 
+/** 单条稍后再看条目 */
 export interface List {
   aid: number
   videos: number
@@ -66,12 +70,14 @@ export enum Dynamic {
   后期鸽看了看自己暗淡无光的羽毛又看了看你们手里闪闪发光的硬币 = '后期鸽看了看自己暗淡无光的羽毛，又看了看你们手里闪闪发光的硬币',
 }
 
+/** UP 主信息 */
 export interface Owner {
   mid: number
   name: string
   face: string
 }
 
+/** 分P 信息 */
 export interface Page {
   cid: number
   page: number

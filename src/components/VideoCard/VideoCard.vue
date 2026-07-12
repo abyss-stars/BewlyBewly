@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 视频卡片组件，展示视频封面、标题、作者、播放量等，支持视频预览、稍后再看、右键菜单等交互
 import type { CSSProperties } from 'vue'
 import type { Video } from './types'
 import type { VideoInfo } from '~/models/video/videoInfo'
@@ -54,6 +55,7 @@ const selectedDislikeOpt = ref<{ dislikeReasonId: number }>()
 
 const videoCurrentTime = ref<number | null>(null)
 
+// 根据视频属性构造跳转 URL，优先级：url > bvid/aid > epid > roomid
 const videoUrl = computed(() => {
   if (removed.value || !props.video)
     return undefined
@@ -107,6 +109,7 @@ watch(() => isHover.value, async (newValue) => {
   }
 })
 
+// 切换稍后再看状态，添加到稍后再看或从中移除
 function toggleWatchLater() {
   if (!props.video)
     return
@@ -137,6 +140,7 @@ function toggleWatchLater() {
   }
 }
 
+// 鼠标进入时设置背景封面，延迟后显示视频预览
 function handleMouseEnter() {
   props.video && setActivatedCover(`${removeHttpFromUrl(props.video.cover)}@672w_378h_1c_!web-home-common-cover`)
 
@@ -156,6 +160,7 @@ function handleMouseEnter() {
   }
 }
 
+// 鼠标离开时隐藏视频预览，恢复 content-visibility
 function handelMouseLeave() {
   contentVisibility.value = 'auto'
   isHover.value = false
@@ -163,6 +168,7 @@ function handelMouseLeave() {
   clearTimeout(mouseLeaveTimeOut.value)
 }
 
+// 点击时记录播放进度，抽屉模式下拦截点击用抽屉打开
 function handleClick(event: MouseEvent) {
   videoCurrentTime.value = getCurrentTime(videoElement)
 
@@ -172,6 +178,7 @@ function handleClick(event: MouseEvent) {
   }
 }
 
+// 计算右键菜单位置：如果屏幕底部空间不足 406px 则向上弹出
 function handleMoreBtnClick(event: MouseEvent) {
   // the distance between the bottom and the height of the more button
   if (!moreBtnRef.value)
@@ -194,6 +201,7 @@ function handleMoreBtnClick(event: MouseEvent) {
   showVideoOptions.value = true
 }
 
+// 撤销"不感兴趣"操作，appRcmd 类型需调 API 撤销
 function handleUndo() {
   if (props.type === 'appRcmd') {
     const params = {

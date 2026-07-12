@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 番剧时间表组件。
+ * 以横向滚动的方式展示一周七天的新番更新时刻表。
+ */
 import type { Result as TimetableItem, TimetableResult } from '~/models/anime/timeTable'
 import { useI18n } from 'vue-i18n'
 
@@ -10,6 +14,7 @@ import { removeHttpFromUrl } from '~/utils/main'
 const { t } = useI18n()
 const animeTimeTable = reactive<TimetableItem[]>([])
 
+/** 一周七天的国际化名称列表 */
 const daysOfTheWeekList = computed(() => {
   return [
     t('anime.anime_timetable.days_of_week.mon'),
@@ -26,11 +31,13 @@ onMounted(() => {
   getAnimeTimeTable()
 })
 
+/** 刷新时间表数据，清空后重新获取 */
 function refreshAnimeTimeTable() {
   animeTimeTable.length = 0
   getAnimeTimeTable()
 }
 
+/** 从 API 获取番剧时间表数据 */
 function getAnimeTimeTable() {
   api.anime.getAnimeTimeTable()
     .then((res: TimetableResult) => {

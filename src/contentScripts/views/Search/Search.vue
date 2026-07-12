@@ -1,4 +1,8 @@
 <script lang="ts" setup>
+/**
+ * 搜索页面组件。
+ * 居中展示 Logo 和搜索栏，支持自定义壁纸和毛玻璃效果。
+ */
 import { settings } from '~/logic'
 </script>
 

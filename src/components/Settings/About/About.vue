@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 关于页面
+ * 展示版本信息、赞助入口、贡献者、导入/导出/重置设置、Safari 帮助者信息
+ */
+
 import { useI18n } from 'vue-i18n'
 import browser from 'webextension-polyfill'
 
@@ -52,6 +57,7 @@ onMounted(() => {
   checkGitHubRelease()
 })
 
+/** 导入设置：从 JSON 文件读取并合并到当前设置 */
 function handleImportSettings() {
   if (importSettingsRef.value) {
     importSettingsRef.value.click()
@@ -86,6 +92,7 @@ function handleImportSettings() {
   }
 }
 
+/** 导出设置：将当前设置导出为 JSON 文件并触发下载 */
 function handleExportSettings() {
   const jsonStr = JSON.stringify(settings.value)
   const blob = new Blob([jsonStr], { type: 'application/json' })
@@ -97,6 +104,7 @@ function handleExportSettings() {
   URL.revokeObjectURL(url)
 }
 
+/** 重置设置：恢复为默认值，但保留当前语言设置 */
 function handleResetSettings() {
   const result = confirm(
     t('settings.reset_settings_confirm'),
@@ -108,6 +116,7 @@ function handleResetSettings() {
   }
 }
 
+/** 检查 GitHub 最新版本，与当前版本比较判断是否有新版本 */
 async function checkGitHubRelease() {
   const apiUrl = `https://api.github.com/repos/BewlyBewly/BewlyBewly/releases/latest`
 

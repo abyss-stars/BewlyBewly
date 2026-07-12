@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 空状态组件，显示空态图片和可选描述文字
 import browser from 'webextension-polyfill'
 
 const props = defineProps<{

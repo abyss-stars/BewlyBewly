@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 排行榜组件。
+ * 展示 B 站各分区和番剧的排行榜，左侧为分区导航，右侧为视频/PGC 列表。
+ * 支持视频排行榜和 PGC（番剧/影视）排行榜两种类型。
+ */
 import type { RankingType } from '../types'
 
 import type { GridLayoutType } from '~/logic'

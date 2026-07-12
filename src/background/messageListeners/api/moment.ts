@@ -1,3 +1,7 @@
+/**
+ * 动态相关 API 定义
+ * 包含顶栏动态数量、顶栏动态列表、直播动态、全部动态等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

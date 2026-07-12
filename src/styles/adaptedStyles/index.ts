@@ -1,3 +1,8 @@
+/**
+ * 适配样式汇总入口
+ * 根据当前页面 URL 动态加载对应的样式文件，
+ * 为 Bilibili 各个页面提供 BewlyBewly 的外观适配
+ */
 import { settings } from '~/logic/storage'
 import { isHomePage, isInIframe } from '~/utils/main'
 import './common'
@@ -5,6 +10,7 @@ import './common'
 import './shadowDom'
 import './thirdParties'
 
+/** 根据当前 URL 判断所在页面，动态导入对应的 SCSS 样式并设置页面 class */
 async function setupStyles() {
   const currentUrl = document.URL
 

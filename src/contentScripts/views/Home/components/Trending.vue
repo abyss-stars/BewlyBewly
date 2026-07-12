@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 热门趋势组件。
+ * 展示 B 站热门视频列表，支持分页加载和无限滚动。
+ */
 import type { GridLayoutType } from '~/logic'
 import type { TrendingResult, List as VideoItem } from '~/models/video/trending'
 import { useBewlyApp } from '~/composables/useAppProvider'

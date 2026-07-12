@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 输入框组件，支持文本/密码/邮箱/数字类型和多种尺寸，提供前后插槽
 type Size = 'small' | 'medium' | 'large'
 interface Props {
   size?: Size
@@ -31,6 +32,7 @@ const padding = computed(() => {
   return '0 var(--bew-base-font-size)'
 })
 
+// 对外暴露的聚焦方法
 function focus() {
   inputRef.value?.focus()
 }

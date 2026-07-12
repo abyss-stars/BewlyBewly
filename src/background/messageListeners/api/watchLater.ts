@@ -1,3 +1,7 @@
+/**
+ * 稍后再看 API 定义
+ * 包含添加到稍后再看、移除、获取列表、清空列表等接口
+ */
 import type { APIMAP } from '../../utils'
 import { AHS } from '../../utils'
 

@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 设置项组件
+ * 提供统一的设置行布局，包含标题、描述、操作区域和底部扩展区域
+ */
+
 defineProps<{
   title?: string
   desc?: string

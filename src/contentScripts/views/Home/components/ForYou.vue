@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 推荐列表组件。
+ * 支持两种推荐模式：Web 端推荐和 App 端推荐，
+ * 均支持无限滚动加载、内容过滤和不感兴趣反馈。
+ */
 import type { GridLayoutType } from '~/logic'
 
 import type { AppForYouResult, Item as AppVideoItem } from '~/models/video/appForYou'

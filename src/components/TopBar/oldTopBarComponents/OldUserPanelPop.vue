@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 旧版用户面板弹出组件（Bilibili 风格）
+ * 展示用户信息、等级进度、关注/粉丝/动态统计和登出按钮
+ */
+
 import type { UserInfo, UserStat } from '../types'
 import DOMPurify from 'dompurify'
 
@@ -88,6 +93,7 @@ onMounted(() => {
     })
 })
 
+/** 登出：撤销授权并调用 B 站登出接口 */
 async function logout() {
   revokeAccessKey()
   api.auth.logout({
@@ -108,6 +114,7 @@ const levelIcons: string[] = [
   LV6_LIGHTNING_ICON,
 ]
 
+/** 获取用户等级对应的 SVG 图标 */
 function getLvIcon(level: number, isSigma: boolean = false): string {
   if (level === 6 && isSigma) {
     return LV6_LIGHTNING_ICON

@@ -1,3 +1,4 @@
+/** Bilibili Web 端推荐 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface forYouResult {
@@ -7,6 +8,7 @@ export interface forYouResult {
   data: Data
 }
 
+/** Web 推荐数据 */
 export interface Data {
   item: Item[]
   side_bar_column: any[]
@@ -18,6 +20,7 @@ export interface Data {
   mid: number
 }
 
+/** 推荐视频条目 */
 export interface Item {
   id: number
   bvid: string
@@ -49,17 +52,20 @@ export enum Goto {
   AV = 'av',
 }
 
+/** UP 主信息 */
 export interface Owner {
   mid: number
   name: string
   face: string
 }
 
+/** 推荐理由 */
 export interface RcmdReason {
   reason_type: number
   content?: string
 }
 
+/** 视频统计 */
 export interface Stat {
   view: number
   like: number

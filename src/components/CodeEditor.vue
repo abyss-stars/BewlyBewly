@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 代码编辑器组件，基于 textarea 实现，使用等宽字体
 defineProps<{
   modelValue: string | number
 }>()

@@ -1,4 +1,9 @@
 <script lang="ts" setup>
+/**
+ * 通用设置页面
+ * 管理语言、字体、性能（毛玻璃/阴影）、链接打开行为、视频卡片和广告过滤等通用设置
+ */
+
 import { useI18n } from 'vue-i18n'
 
 import { settings } from '~/logic'

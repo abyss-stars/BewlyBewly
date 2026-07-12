@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 视频卡片骨架屏组件，支持水平和垂直两种布局的占位效果
 defineProps<{
   horizontal?: boolean
   hasTag?: boolean

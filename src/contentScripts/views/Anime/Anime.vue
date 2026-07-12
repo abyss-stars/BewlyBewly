@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * 番剧页面组件。
+ * 展示用户的追番列表、热门番剧、番剧时间表和推荐番剧。
+ */
 import type { List as PopularAnimeItem, PopularAnimeResult } from '~/models/anime/popular'
 import type { ItemSubItem as RecommendationItem, RecommendationResult } from '~/models/anime/recommendation'
 import type { List as WatchListItem, WatchListResult } from '~/models/anime/watchList'
@@ -12,6 +16,7 @@ import AnimeTimeTable from './components/AnimeTimeTable.vue'
 const animeWatchList = reactive<WatchListItem[]>([])
 const recommendAnimeList = reactive<RecommendationItem[]>([])
 const popularAnimeList = reactive<PopularAnimeItem[]>([])
+/** 推荐番剧分页游标 */
 const cursor = ref<number>(0)
 const isLoadingAnimeWatchList = ref<boolean>()
 const isLoadingPopularAnime = ref<boolean>()
@@ -21,6 +26,7 @@ const noMoreContent = ref<boolean>()
 const animeTimeTableRef = ref()
 const { handleReachBottom, handlePageRefresh } = useBewlyApp()
 
+/** 是否任一列表仍在加载中 */
 const isLoading = computed(() => {
   return isLoadingAnimeWatchList.value || isLoadingPopularAnime.value || isLoadingRecommendAnime.value
 })
@@ -33,6 +39,7 @@ onMounted(() => {
   initPageAction()
 })
 
+/** 初始化页面行为：触底加载更多和下拉刷新 */
 function initPageAction() {
   handleReachBottom.value = () => {
     if (isLoadingRecommendAnime.value)
@@ -59,6 +66,7 @@ function initPageAction() {
   }
 }
 
+/** 获取用户的追番列表 */
 function getAnimeWatchList() {
   isLoadingAnimeWatchList.value = true
   api.anime.getAnimeWatchList({
@@ -81,6 +89,7 @@ function getAnimeWatchList() {
     })
 }
 
+/** 获取推荐番剧列表，支持分页加载 */
 function getRecommendAnimeList() {
   isLoadingRecommendAnime.value = true
   api.anime.getRecommendAnimeList({
@@ -107,6 +116,7 @@ function getRecommendAnimeList() {
     })
 }
 
+/** 获取热门番剧列表 */
 function getPopularAnimeList() {
   isLoadingPopularAnime.value = true
   api.anime.getPopularAnimeList()

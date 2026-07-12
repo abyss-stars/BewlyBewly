@@ -1,3 +1,4 @@
+/** Bilibili PGC（专业生产内容）排行榜 API 返回模型 */
 // https://app.quicktype.io/?l=ts
 
 export interface RankingPgcResult {
@@ -6,12 +7,14 @@ export interface RankingPgcResult {
   message: string
 }
 
+/** PGC 排行榜数据 */
 export interface Data {
   list: List[]
   note: string
   season_type: number
 }
 
+/** PGC 榜单条目 */
 export interface List {
   badge: Badge
   badge_info: BadgeInfo
@@ -38,6 +41,7 @@ export enum Badge {
   限时免费 = '限时免费',
 }
 
+/** 角标信息 */
 export interface BadgeInfo {
   bg_color: BgColor
   bg_color_night: BgColorNight
@@ -63,11 +67,13 @@ export enum Name {
   PlaydataSquareLine500 = 'playdata-square-line@500',
 }
 
+/** 最新剧集 */
 export interface NewEp {
   cover: string
   index_show: string
 }
 
+/** PGC 统计 */
 export interface Stat {
   danmaku: number
   follow: number

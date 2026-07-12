@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 图片组件，自动生成 avif 和 webp 格式的备用源，提供现代图片格式支持
 defineProps<{
   src: string
   loading: 'lazy' | 'eager'

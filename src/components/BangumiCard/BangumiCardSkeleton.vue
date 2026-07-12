@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 番剧卡片骨架屏组件，在数据加载前展示占位效果
 defineProps<{
   horizontal?: boolean
 }>()

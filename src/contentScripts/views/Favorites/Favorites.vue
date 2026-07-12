@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 收藏页面组件。
+ * 展示用户的收藏夹列表，支持切换收藏夹、搜索和取消收藏。
+ * 左侧为视频列表，右侧为收藏夹侧边栏。
+ */
 import type { FavoriteCategory, FavoriteResource } from '~/components/TopBar/types'
 
 import type { Media as FavoriteItem, FavoritesResult } from '~/models/video/favorite'
@@ -15,11 +20,14 @@ const { t } = useI18n()
 
 const favoriteCategories = reactive<CategoryItem[]>([])
 const favoriteResources = reactive<FavoriteItem[]>([])
+/** 分类下拉选项 */
 const categoryOptions = reactive<Array<{ value: any, label: string }>>([])
 
 const selectedCategory = ref<FavoriteCategory>()
+/** 当前选中收藏夹的封面图 */
 const activatedCategoryCover = ref<string>('')
 
+/** 控制栏是否因顶栏隐藏而上移 */
 const shouldMoveCtrlBarUp = ref<boolean>(false)
 const currentPageNum = ref<number>(1)
 const keyword = ref<string>('')
@@ -58,6 +66,7 @@ onUnmounted(() => {
   emitter.off(TOP_BAR_VISIBILITY_CHANGE)
 })
 
+/** 初始化页面行为：触底加载更多和下拉刷新（支持关键词搜索） */
 function initPageAction() {
   handleReachBottom.value = async () => {
     if (isLoading.value)
@@ -78,6 +87,7 @@ function initPageAction() {
   }
 }
 
+/** 获取用户的所有收藏夹分类 */
 async function getFavoriteCategories() {
   await api.favorite.getFavoriteCategories({
     up_mid: getUserID(),
@@ -137,6 +147,7 @@ async function getFavoriteResources(
   }
 }
 
+/** 切换当前查看的收藏夹 */
 async function changeCategory(categoryItem: FavoriteCategory) {
   if (isLoading.value)
     return
@@ -148,6 +159,7 @@ async function changeCategory(categoryItem: FavoriteCategory) {
   getFavoriteResources(categoryItem.id, 1)
 }
 
+/** 根据关键词搜索收藏内容 */
 function handleSearch() {
   currentPageNum.value = 1
   favoriteResources.length = 0
@@ -164,6 +176,7 @@ function jumpToLoginPage() {
   location.href = 'https://passport.bilibili.com/login'
 }
 
+/** 取消收藏指定视频，需用户确认 */
 function handleUnfavorite(favoriteResource: FavoriteResource) {
   const result = confirm(
     t('favorites.unfavorite_confirm'),
@@ -180,6 +193,7 @@ function handleUnfavorite(favoriteResource: FavoriteResource) {
   }
 }
 
+/** 判断收藏项是否为音乐（音频）类型，因为其链接格式不同 */
 function isMusic(item: FavoriteResource) {
   return item.link.includes('bilibili://music')
 }

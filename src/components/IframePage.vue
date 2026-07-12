@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Iframe 页面组件，在页面中内嵌 iframe 加载外部内容，支持暗色模式同步和返回顶部/刷新
 import { useDark } from '~/composables/useDark'
 
 const props = defineProps<{
@@ -44,6 +45,7 @@ onBeforeUnmount(() => {
   releaseIframeResources()
 })
 
+// 释放 iframe 资源：先设置 about:blank 释放内存，再从 DOM 移除
 async function releaseIframeResources() {
   // Clear iframe content
   currentUrl.value = 'about:blank'
@@ -65,12 +67,14 @@ async function releaseIframeResources() {
   iframeRef.value = null
 }
 
+// 返回 iframe 顶部
 function handleBackToTop() {
   if (iframeRef.value) {
     iframeRef.value.contentWindow?.scrollTo({ top: 0, behavior: 'smooth' })
   }
 }
 
+// 刷新 iframe 内容
 function handleRefresh() {
   if (iframeRef.value) {
     iframeRef.value.contentWindow?.location.reload()

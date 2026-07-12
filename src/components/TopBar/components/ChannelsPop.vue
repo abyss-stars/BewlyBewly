@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 频道弹出面板
+ * 展示 B 站所有内容分区和常用链接（直播、专栏、赛事等）
+ */
+
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

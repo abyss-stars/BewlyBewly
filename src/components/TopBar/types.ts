@@ -1,4 +1,10 @@
+/**
+ * 顶栏相关类型定义
+ * 包含用户信息、消息、收藏、动态等数据结构
+ */
+
 // https://github.com/SocialSisterYi/bilibili-API-collect/blob/e379d904c2753fa30e9083f59016f07e89d19467/docs/login/login_info.md#%E5%AF%BC%E8%88%AA%E6%A0%8F%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF
+/** B站用户信息 */
 export interface UserInfo {
   face: string // avatar
   level_info: {

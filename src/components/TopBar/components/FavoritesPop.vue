@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 收藏弹出面板
+ * 左侧为收藏夹列表，右侧为该收藏夹的内容，支持滚动加载更多
+ */
+
 import type { Ref } from 'vue'
 
 import type { FavoriteCategory, FavoriteResource } from '../types'
@@ -47,8 +52,8 @@ onMounted(() => {
   initData()
 })
 
+/** 初始化收藏数据：获取收藏夹列表并加载第一个收藏夹内容 */
 async function initData() {
-  await getFavoriteCategories()
   activatedMediaId.value = favoriteCategories[0].id
   activatedFavoriteTitle.value = favoriteCategories[0].title
 
@@ -72,22 +77,7 @@ async function initData() {
   }
 }
 
-async function getFavoriteCategories() {
-  await api.favorite.getFavoriteCategories({
-    up_mid: getUserID(),
-  })
-    .then((res) => {
-      if (res.code === 0) {
-        Object.assign(favoriteCategories, res.data.list)
-        noMoreContent.value = false
-      }
-      isLoading.value = false
-    })
-}
-
-/**
- * Get favorite video resources
- */
+/** 获取当前激活收藏夹的视频资源，支持分页加载 */
 function getFavoriteResources() {
   isLoading.value = true
   api.favorite.getFavoriteResources({
@@ -116,12 +106,14 @@ function getFavoriteResources() {
     })
 }
 
+/** 刷新收藏夹资源列表（外部可调用） */
 function refreshFavoriteResources() {
   favoriteResources.length = 0
   currentPageNum.value = 1
   getFavoriteResources()
 }
 
+/** 切换收藏夹分类 */
 function changeCategory(categoryItem: FavoriteCategory) {
   activatedMediaId.value = categoryItem.id
   activatedFavoriteTitle.value = categoryItem.title

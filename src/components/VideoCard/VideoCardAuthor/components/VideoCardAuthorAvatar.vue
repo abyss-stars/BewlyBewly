@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+// 视频作者头像组件，支持多人联合投稿的多头像叠加显示，以及直播/关注状态指示
 import type { Author } from '../../types'
 
 import { removeHttpFromUrl } from '~/utils/main'
